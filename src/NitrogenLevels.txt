@@ -1,0 +1,9 @@
+"Reservoir"	"Mass kg"	"Major Species"
+"Atmosphere"	4*(10**18)	N2
+"Biomass"	1*(10**15)	NHx
+"Ocean"		2.4*(10**16)	N2
+"Sedimentary Rocks"		2*(10**17)	NHx
+"Continential Crust"	1.7*(10**18)	NHx
+"Mantle"	2.8*(10**19)	NHx
+"Core"	1.7*(10**20) FexNy
+
