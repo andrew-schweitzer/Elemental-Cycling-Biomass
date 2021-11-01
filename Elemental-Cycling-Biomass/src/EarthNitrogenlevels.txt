@@ -1,0 +1,6 @@
+"Location"	"Metric" 	"unit"
+"Surface Pressure"	1.0 	"Kg" 	
+"Atmosphere Mass"	5.2*(10**18)	"Kg"
+"Atmospheric Mass N"	4.0*(10**18)	"Kg"
+"Planet Mass"	6.0*(10**24)	"Kg"
+"bulk Silicate N"	3.4*(10**19)	"Kg"
