@@ -31,7 +31,7 @@ Marine-sediment-absorption:
         n ~ 1
         Kf ~ 1e-4
 
-    Crust_Continential(t) = Crust_Continential(t-1) + Q
+    Crust_Continential(t) = Crust_Continential.N(t-1) + Q
     Ocean(t) = Ocean(t-1) - Q
     
 Continential-Erosion:

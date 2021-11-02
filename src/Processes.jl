@@ -60,3 +60,18 @@ end
 function Meteors()
     
 end
+
+function Henry()
+    p = mol_frac_N*Atmosphere_pressure #Atm
+    c = mol_N_ocean/Ocean.volume # mol/Liter
+    KN2 = 1600 #Liters*Atm/mol
+
+    if p/c > KN2
+        #partial pressure high
+        #gases will move from atmosphere to ocean
+    elseif p/c < KN2
+        #concentration high
+        #gases will move from ocean to atmosphere
+    else
+        #no movement due to gases dissolving in oceans 
+end

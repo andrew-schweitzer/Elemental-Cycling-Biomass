@@ -15,9 +15,9 @@ using Classes
 end
 
 Ocean = Resevoir(volume = 1.3e18, Nitrogen = 2.4e16)
-CrustOceanic = Resevoir(Nitrogen = 3.4e18)
-CrustContinential = Resevoir(Nitrogen = 3.4e18)
-Atmosphere = Resevoir(mass = 5.2e18,Nitrogen = 4e18,Phosphorous=0)
+CrustOceanic = Resevoir(Nitrogen = 2.0e17)
+CrustContinential = Resevoir(Nitrogen = 1.7e18)
+Atmosphere = Resevoir(mass = 5.2e18,Nitrogen = 4e18)
 Mantle = Resevoir(Nitrogen = BigFloat(2.8e19))
 
 #this metric will be used to assure that no mass is created nor lost
