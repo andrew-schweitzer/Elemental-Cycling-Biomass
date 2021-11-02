@@ -15,7 +15,8 @@ using Classes
 end
 
 Ocean = Resevoir(volume = 1.3e18, Nitrogen = 2.4e16)
-Crust = Resevoir(Nitrogen = 3.4e18)
+CrustOceanic = Resevoir(Nitrogen = 3.4e18)
+CrustContinential = Resevoir(Nitrogen = 3.4e18)
 Atmosphere = Resevoir(mass = 5.2e18,Nitrogen = 4e18,Phosphorous=0)
 Mantle = Resevoir(Nitrogen = BigFloat(2.8e19))
 

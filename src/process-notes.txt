@@ -1,0 +1,49 @@
+METEOR:
+
+    F(t) = F0 + (F1 - F0)^(-t/tao)
+    tao: 150 Ma
+    above formula is utilized for cometary impact and impact fixation
+
+    Nitrogen:
+        cometary_input(t) = CI0 + (CI1 - CI0)^(-t/tao)
+            CI0 = 2.4e5
+            CI1 = 2.4e8
+            tao = 150 Ma
+        cometary_fixation(t) = CF0 + (CF1 - CF0)^(-t/tao)
+            CF0 = 4.7e6
+            CF1 = 4.8e9
+            tao = 150 Ma
+
+Ocean-Atmosphere-Equilibrium:
+
+    K = p / c
+        p: partial pressure of specie in Atmosphere
+        c: concentration in Ocean
+        assume constant average ocean temp to be 25C
+        K_N2 = 1600 L*atm/mol
+
+Marine-sediment-absorption:
+
+    Q = Kf*( (Ce)^(1/n) )
+    Q: amt of solute absorbed per mass of sediment
+    Kf: absorption capacity (generally Kf < 1)
+    n: Freundlich coefficient (generally n < 1)
+        n ~ 1
+        Kf ~ 1e-4
+
+    Crust_Continential(t) = Crust_Continential(t-1) + Q
+    Ocean(t) = Ocean(t-1) - Q
+    
+Continential-Erosion:
+
+    F_sed_mantle = (1-epsilon)*(M_sed / tao)
+    epsilon: fraction recycled to cont_crust instead of mantle
+        range(0,1,.01)
+    tao: subduction rate 
+        range(1e-5, 5e-5)
+    M_sed: mass of nitrogen in sediments
+
+Erosion:
+
+    Crust_Continential(t) = Crust_Continential(t-1)*(1 - Erosion_rate)
+    Ocean(t) = Crust_Continential(t-1)*(Erosion_rate)

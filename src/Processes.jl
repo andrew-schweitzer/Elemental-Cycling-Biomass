@@ -19,9 +19,6 @@
 #       The settling of sediment in the oceans onto the crust where layering
 #       pressure, and time for sendiemntary rock in the oceanic crust.
 #
-#   Accretion:
-#
-#
 #   Precipitation:
 #       The movement of minerals from the atmosphere to the ocean and crust
 #       via rain and dust settling.
@@ -49,10 +46,6 @@ function Convection()
 end
 
 function Sedimentation()
-    
-end
-
-function Accretion()
     
 end
 
