@@ -6,12 +6,12 @@ using Classes
 
 #creates common structure for all resevoirs with initial values set at 0.0
 @with_kw struct Resevoir
-    volume::BigFloat = 0.0
+    volume::BigFloat = 0.0 #only significant for ocean
     mass::BigFloat = 0.0
-    Nitrogen::BigFloat = 0.0
-    CarbonDioxide::BigFloat = 0.0
-    Oxygen::BigFloat = 0.0
-    Phosphorous::BigFloat = 0.0
+    Nitrogen::BigFloat = 0.0 #mass
+    CarbonDioxide::BigFloat = 0.0  #mass
+    Oxygen::BigFloat = 0.0  #mass
+    Phosphorous::BigFloat = 0.0  #mass
 end
 
 Ocean = Resevoir(volume = 1.3e18, Nitrogen = 2.4e16)

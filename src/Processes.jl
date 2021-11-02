@@ -33,6 +33,11 @@
 #
 ##----------------------------------------------------------------------------##
 
+using Pkg
+Pkg.add("PeriodicTable")
+using PeriodicTable
+
+
 function Erosion()
     
 end
@@ -62,8 +67,11 @@ function Meteors()
 end
 
 function Henry()
+
+    N2_mol_ocean = Ocean.Nitrogen/PeriodicTable.elements[:N].atomic_mass
+
     p = mol_frac_N*Atmosphere_pressure #Atm
-    c = mol_N_ocean/Ocean.volume # mol/Liter
+    c = N2_mol_ocean/Ocean.volume # mol/Liter
     KN2 = 1600 #Liters*Atm/mol
 
     if p/c > KN2
