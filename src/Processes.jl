@@ -38,11 +38,13 @@ Pkg.add("PeriodicTable")
 using PeriodicTable
 
 
-function Erosion()
-    
+function F_Crust_Ocean(N,tao) 
+
+    F = N/tao 
+    return F
 end
 
-function Subduction()
+function F_Crust_Mantle()
     
 end
 
@@ -50,8 +52,10 @@ function Convection()
     
 end
 
-function Sedimentation()
-    
+function F_Ocean_Crust(N,m,t)
+
+    F = 0.0001*Ce
+    return F
 end
 
 function Precipitation()
@@ -66,7 +70,7 @@ function Meteors()
     
 end
 
-function Henry()
+function F_Atm_Ocean()
 
     N2_mol_ocean = Ocean.Nitrogen/PeriodicTable.elements[:N].atomic_mass
 

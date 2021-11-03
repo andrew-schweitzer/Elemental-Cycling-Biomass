@@ -7,18 +7,22 @@ using Classes
 #creates common structure for all resevoirs with initial values set at 0.0
 @with_kw struct Resevoir
     volume::BigFloat = 0.0 #only significant for ocean
-    mass::BigFloat = 0.0
     Nitrogen::BigFloat = 0.0 #mass
-    CarbonDioxide::BigFloat = 0.0  #mass
-    Oxygen::BigFloat = 0.0  #mass
-    Phosphorous::BigFloat = 0.0  #mass
+    #CarbonDioxide::BigFloat = 0.0  #mass
+    #Oxygen::BigFloat = 0.0  #mass
+    #Phosphorous::BigFloat = 0.0  #mass
 end
 
-Ocean = Resevoir(volume = 1.3e18, Nitrogen = 2.4e16)
-CrustOceanic = Resevoir(Nitrogen = 2.0e17)
-CrustContinential = Resevoir(Nitrogen = 1.7e18)
-Atmosphere = Resevoir(mass = 5.2e18,Nitrogen = 4e18)
-Mantle = Resevoir(Nitrogen = BigFloat(2.8e19))
+Ocean = Resevoir(volume = 1.3e18, Nitrogen = N1/Ntotal)
+Crust = Resevoir(Nitrogen = (N2+N3)/Ntotal)
+Atmosphere = Resevoir(Nitrogen = N4/Ntotal)
+Mantle = Resevoir(Nitrogen = N5/Ntotal)
 
-#this metric will be used to assure that no mass is created nor lost
-PlanetMass = 6.0e24 
+
+
+N1 = 2.4e16
+N2 = 2.0e17
+N3 = 1.7e18
+N4 = 4e18
+N5 = 2.8e19
+Ntotal = N1 + N2 + N3 + N4 + N5
