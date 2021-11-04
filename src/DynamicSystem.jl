@@ -38,10 +38,15 @@ end
 
 #                   --------------------------------------------------                   #
 
-function evolve()
+function evolve(t)
 
-    
-    #call processes
+    F_Crust_Ocean()
+    F_Crust_Mantle()
+    F_Ocean_Crust()
+    F_Mantle_Atmosphere()
+    F_Mantle_Ocean(t)
+    F_Henry()
+    F_Meteor(t)
 
 end
 
@@ -58,19 +63,19 @@ end
 
 function Model(Tfinal = 100,t=0)
 
-    include("src/Plot.jl")
     include("src/classes.jl")
     include("src/Processes.jl")
+    include("Visualization/Plot.jl")
 
     initialize()
     store()
 
     while t < Tfinal
         t += 1
-        evolve()
+        evolve(t)
         store()
     end
-    
+
     visualize()
 
 end
