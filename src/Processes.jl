@@ -117,6 +117,7 @@ function F_Henry()
     else
         Planet.ocean.NMass = Planet.ocean.NMass + Cdelta*Planet.ocean.volume
         Planet.atmosphere.NMass = Planet.atmosphere.NMass - Cdelta*Planet.ocean.volume
+    end
 
 end
 

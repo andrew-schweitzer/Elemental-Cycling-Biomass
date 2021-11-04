@@ -55,7 +55,7 @@ end
 
 # Initialize the resevoirs
 
-Planet = PlanetaryBody(Mass = 6e24,
+#= Planet = PlanetaryBody(Mass = 6e24,
                        ocean = Ocean(volume = 1.3e18,NMass = 2.4e16),
                        crust = Crust(NMass = 1.9e18),
                        mantle = Mantle(NMass = 4e18),
@@ -67,11 +67,11 @@ Planet.ocean.Nfraction = Planet.ocean.NMass/Planet.NMass
 Planet.crust.Nfraction = Planet.crust.NMass/Planet.NMass
 Planet.mantle.Nfraction = Planet.mantle.NMass/Planet.NMass
 Planet.atmosphere.Nfraction = Planet.atmosphere.NMass/Planet.NMass
-t = 1
+t = 1 =#
 
 #                   --------------------------------------------------                   #
 
-Monitor = DataFrame(time = Int64[],
+#= Monitor = DataFrame(time = Int64[],
                     VOcean = BigFloat[],
                     OceanNFraction = Float64[],
                     OceanNMass = BigFloat[],
@@ -93,6 +93,6 @@ push!(Monitor, [t,
                 Planet.atmosphere.Nfraction, 
                 Planet.atmosphere.NMass,
                 Planet.mantle.Nfraction, 
-                Planet.mantle.NMass])
+                Planet.mantle.NMass]) =#
 
 #                   --------------------------------------------------                   #
