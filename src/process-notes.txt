@@ -31,18 +31,19 @@ Marine-sediment-absorption:
         n ~ 1
         Kf ~ 1e-4
 
-    Crust_Continential(t) = Crust_Continential.N(t-1) + Q
+    Q = (0.0001)*(Ce)
+
+    Crust(t) = Crust(t-1) + Q
     Ocean(t) = Ocean(t-1) - Q
     
 Continential-Erosion:
 
-    F_sed_mantle = (1-epsilon)*(M_sed / tao)
-    epsilon: fraction recycled to cont_crust instead of mantle
-        range(0,1,.01)
+    F_sed_mantle = M_sed / tao
     tao: subduction rate 
         range(1e-5, 5e-5)
     M_sed: mass of nitrogen in sediments
 
+    F_Crust_Ocean(N,tao) = N/tao
 Erosion:
 
     Crust_Continential(t) = Crust_Continential(t-1)*(1 - Erosion_rate)
