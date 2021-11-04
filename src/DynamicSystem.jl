@@ -55,7 +55,7 @@ end
 function visualize()
 
     
-    #call processes
+    # call processes
 
 end
 
@@ -76,7 +76,7 @@ function Model(Tfinal = 100,t=0)
         store()
     end
 
-    visualize()
+    # visualize()
 
 end
 
