@@ -34,8 +34,6 @@ function initialize()
     Planet.mantle.Nfraction = Planet.mantle.NMass/Planet.NMass
     Planet.atmosphere.Nfraction = Planet.atmosphere.NMass/Planet.NMass
 
-    t = 1
-
 end
 
 #                   --------------------------------------------------                   #
@@ -57,24 +55,23 @@ function visualize()
 end
 
 #                   --------------------------------------------------                   #
+
 function Model(Tfinal = 100,t=0)
 
     include("src/Plot.jl")
     include("src/classes.jl")
     include("src/Processes.jl")
-    
+
+    initialize()
+    store()
+
     while t < Tfinal
-
         t += 1
-        if t == 1
-            initialize() #create 
-        else
-            evolve()
-        end
+        evolve()
         store()
-        visualize()
-
     end
+    
+    visualize()
 
 end
 
