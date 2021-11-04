@@ -95,6 +95,7 @@ function F_Meteor(t)
     tao = 150
 
     Planet.atmosphere.NMass += N0*(N1-N0)*exp(-t/tao)
+    Planet.Mass += N0*(N1-N0)*exp(-t/tao)
 
 end
 

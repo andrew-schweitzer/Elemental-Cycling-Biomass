@@ -4,8 +4,8 @@
 function initialize()
 
     # call classes.jl to construct classes and call Processes.jl to access functions
-    include("src/classes.jl")
-    include("src/Processes.jl")
+    
+    
 
     #initialize dataframe to track changes
 
@@ -40,7 +40,41 @@ end
 
 #                   --------------------------------------------------                   #
 
-function main()
+function evolve()
+
+    
+    #call processes
+
+end
+
+#                   --------------------------------------------------                   #
+
+function visualize()
+
+    
+    #call processes
+
+end
+
+#                   --------------------------------------------------                   #
+function Model(Tfinal = 100,t=0)
+
+    include("src/Plot.jl")
+    include("src/classes.jl")
+    include("src/Processes.jl")
+    
+    while t < Tfinal
+
+        t += 1
+        if t == 1
+            initialize() #create 
+        else
+            evolve()
+        end
+        store()
+        visualize()
+
+    end
 
 end
 
