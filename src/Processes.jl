@@ -2,88 +2,122 @@
 #
 # List of Processes
 #
-#   Erosion:
-#       The breakdown of the surface of the crust that deposits minerals and
-#       material in the waterways and ocean.
+#   F_Crust_Ocean:
+#       
+#   F_Crust_Mantle:
+#       
+#   F_Ocean_Crust:
+#       
+#   F_Mantle_Atmosphere:
+#       
+#   F_Mantle_Ocean:
 #
-#   Subduction:
-#       The movement of crust mass and material .
+#   F_Henry:
 #
-#   Convection:
-#       The movements of the fluids based upon their temperature. There are three
-#       applications of this in the model: the atmosphere, ocean, and mantle. 
-#       Although this also exists in the core due to lack of observable data 
-#       about the core the behavior is not included in this model.
+#   F_Meteor:
 #
-#   Sedimentation:
-#       The settling of sediment in the oceans onto the crust where layering
-#       pressure, and time for sendiemntary rock in the oceanic crust.
-#
-#   Precipitation:
-#       The movement of minerals from the atmosphere to the ocean and crust
-#       via rain and dust settling.
-#
-#   Volcanism:
-#       The movement of mantle material through the crust that can deposit on the
-#       crust and occasionally in the ocean. Additionally, non-ocean volcanos
-#       move material into the atmosphere.
-#
-#   Meteors:
-#       Solar dust and rocks add minerals and mass to the planet.
-#
-##----------------------------------------------------------------------------##
+##---------------------------------------------------------------------------------------##
 
 using Pkg
 Pkg.add("PeriodicTable")
+Pkg.add("Random")
 using PeriodicTable
+using Random
 
+#                   --------------------------------------------------                   #
 
-function F_Crust_Ocean(N,tao) 
+function F_Crust_Ocean() 
 
-    F = N/tao 
-    return F
+    alpha = 0.000001 * rand(50:100) # kg/yr
+
+    Planet.crust.NMass -= alpha
+    Planet.ocean.NMass += alpha
+
 end
+
+#                   --------------------------------------------------                   #
 
 function F_Crust_Mantle()
     
+    epsilon = 0.01 * rand(1:100)
+    tao = 100
+
+    Planet.crust.NMass -= epsilon*(Planet.crust.NMass/tao)
+    Planet.mantle.NMass += epsilon*(Planet.crust.NMass/tao)
+
 end
 
-function Convection()
-    
+#                   --------------------------------------------------                   #
+
+function F_Ocean_Crust()
+
+    VSed = 6.1e17
+    Rho = 1700
+    Kf = 0.001
+
+    F = 0.001*(VSed/Planet.ocean.volume*Rho*Kf)
+
+    Planet.crust.NMass -= F
+    Planet.ocean.NMass += F
+
 end
 
-function F_Ocean_Crust(N,m,t)
+#                   --------------------------------------------------                   #
 
-    F = 0.0001*Ce
-    return F
+function F_Mantle_Atmosphere() 
+
+    delta = 1e6 * rand(2800:3000) 
+
+    Planet.crust.NMass -= delta
+    Planet.ocean.NMass += delta
+
 end
 
-function Precipitation()
-    
+#                   --------------------------------------------------                   #
+
+function F_Mantle_Ocean(t) 
+
+    N0 = 10e-8
+    N1 = 3e-8
+    tao = 1e9
+
+    Planet.mantle.NMass -= N0*(N1-N0)*exp(-t/tao)
+    Planet.ocean.NMass += N0*(N1-N0)*exp(-t/tao)
+
 end
 
-function Volcanism()
-    
+#                   --------------------------------------------------                   #
+
+function F_Meteor(t) 
+
+    N0 = 2.4e5
+    N1 = 2.4e8
+    tao = 150
+
+    Planet.atmosphere.NMass += N0*(N1-N0)*exp(-t/tao)
+
 end
 
-function Meteors()
-    
-end
+#                   --------------------------------------------------                   #
 
-function F_Atm_Ocean()
+function F_Henry() 
 
-    N2_mol_ocean = Ocean.Nitrogen/PeriodicTable.elements[:N].atomic_mass
+    AtomicMassN2 = 2 * elements[8].atomic_mass / 1000 # g/mol
 
-    p = mol_frac_N*Atmosphere_pressure #Atm
-    c = N2_mol_ocean/Ocean.volume # mol/Liter
-    KN2 = 1600 #Liters*Atm/mol
+    Kmol = 1600 # L*Atm/mol
+    Kkg = 1600 / AtomicMassN2 #changed units -> L*Atm/kg
 
-    if p/c > KN2
-        #partial pressure high
-        #gases will move from atmosphere to ocean
-    elseif p/c < KN2
-        #concentration high
-        #gases will move from ocean to atmosphere
+    Cmax = Kkg*Planet.atmosphere.NMass*Planet.ocean.volume*AtomicMassN2/Planet.atmosphere.Mass
+    Ccurr = Planet.ocean.NMass/(AtomicMassN2*Planet.ocean.volume)
+
+    if Cmax - Ccurr < 0
+
+        Planet.ocean.NMass = Planet.ocean.NMass - Cdelta*Planet.ocean.volume
+        Planet.atmosphere.NMass = Planet.atmosphere.NMass + Cdelta*Planet.ocean.volume
     else
-        #no movement due to gases dissolving in oceans 
+        Planet.ocean.NMass = Planet.ocean.NMass + Cdelta*Planet.ocean.volume
+        Planet.atmosphere.NMass = Planet.atmosphere.NMass - Cdelta*Planet.ocean.volume
+
 end
+
+#                   --------------------------------------------------                   #

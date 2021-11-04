@@ -6,6 +6,9 @@ Pkg.add("Classes")
 Pkg.add("Parameters")
 Pkg.add("DataFrames")
 Pkg.add("StaticArrays")
+
+#                   --------------------------------------------------                   #
+
 using Parameters
 using Classes
 using DataFrames
@@ -33,14 +36,15 @@ end
 end
 
 @with_kw mutable struct Atmosphere
-    Nfraction::BigFloat = 0.0 #fraction of total mass in resevoir
-    NMass::BigFloat = 0.0 #mass
+    Nfraction::BigFloat = 0.0 #fraction of Planetary Nitrogen mass in atmosphere
+    NMass::BigFloat = 0.0 # mass of Nitrogen in atmosphere
+    Mass::BigFloat = 0.0 # mass of atmosphere
 end
 
 @with_kw mutable struct PlanetaryBody
-    NMassPlanet::BigFloat = 0.0 # Mass of all N on planet
+    NMass::BigFloat = 0.0 # Mass of all N on planet
     NFraction::BigFloat = 1.0
-    MassPlanet::BigFloat = 0.0 # Mass of Planet
+    Mass::BigFloat = 0.0 # Mass of Planet
     ocean::Ocean
     crust::Crust
     atmosphere::Atmosphere
@@ -51,18 +55,19 @@ end
 
 # Initialize the resevoirs
 
-Planet = PlanetaryBody(ocean = Ocean(volume = 1.3e18,NMass = 2.4e16),
+Planet = PlanetaryBody(Mass = 6e24,
+                       ocean = Ocean(volume = 1.3e18,NMass = 2.4e16),
                        crust = Crust(NMass = 1.9e18),
                        mantle = Mantle(NMass = 4e18),
-                       atmosphere = Atmosphere(NMass = 2.8e19))
+                       atmosphere = Atmosphere(Mass = 4e18,NMass = 2.8e19))
 
-Planet.NMassPlanet = Planet.ocean.NMass + Planet.crust.NMass + Planet.mantle.NMass + Planet.atmosphere.NMass
-Planet.MassPlanet = 6e24
+Planet.NMass = Planet.ocean.NMass + Planet.crust.NMass + Planet.mantle.NMass + Planet.atmosphere.NMass
+Planet.Mass = 6e24
 
-Planet.ocean.Nfraction = Planet.ocean.NMass/Planet.NMassPlanet
-Planet.crust.Nfraction = Planet.crust.NMass/Planet.NMassPlanet
-Planet.mantle.Nfraction = Planet.mantle.NMass/Planet.NMassPlanet
-Planet.atmosphere.Nfraction = Planet.atmosphere.NMass/Planet.NMassPlanet
+Planet.ocean.Nfraction = Planet.ocean.NMass/Planet.NMass
+Planet.crust.Nfraction = Planet.crust.NMass/Planet.NMass
+Planet.mantle.Nfraction = Planet.mantle.NMass/Planet.NMass
+Planet.atmosphere.Nfraction = Planet.atmosphere.NMass/Planet.NMass
 t = 1
 
 #                   --------------------------------------------------                   #
@@ -79,7 +84,7 @@ Monitor = DataFrame(time = Int64[],
                     MantleNMass = BigFloat[],
                     NMassTotal = BigFloat[])       
 
-push!(Monitor, [t, Planet.ocean.volume, Planet.NMassPlanet,
+push!(Monitor, [t, Planet.ocean.volume, Planet.NMass,
                 Planet.ocean.Nfraction, Planet.ocean.NMass,
                 Planet.crust.Nfraction, Planet.crust.NMass,
                 Planet.atmosphere.Nfraction, Planet.atmosphere.NMass,
