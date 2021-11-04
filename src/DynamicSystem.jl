@@ -3,10 +3,6 @@
 
 function initialize()
 
-    # call classes.jl to construct classes and call Processes.jl to access functions
-    
-    
-
     #initialize dataframe to track changes
 
     Monitor = DataFrame(time = Int64[],
@@ -52,12 +48,7 @@ end
 
 #                   --------------------------------------------------                   #
 
-function visualize()
 
-    
-    # call processes
-
-end
 
 #                   --------------------------------------------------                   #
 
