@@ -8,6 +8,7 @@ Pkg.add("ECharts")
 function visualize(TFinal)
 
     PlotSteps = range(1,TFinal,step = (TFinal/10))
+    
     VisualizeNFractionOverTime()
     VisualizeNMassOverTime()
     VisualizeGlobalNDistribution(PlotSteps)

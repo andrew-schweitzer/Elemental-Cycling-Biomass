@@ -3,6 +3,10 @@
 
 function initialize()
 
+    include("src/classes.jl")
+    include("src/Processes.jl")
+    
+
     #initialize dataframe to track changes
 
     Monitor = DataFrame(time = Int64[],
@@ -48,35 +52,7 @@ end
 
 #                   --------------------------------------------------                   #
 
-
-
-#                   --------------------------------------------------                   #
-
-function RunModel(TFinal = 100,t=0,CSV = false)
-
-    include("src/classes.jl")
-    include("src/Processes.jl")
-    include("Visualization/Plot.jl")
-
-    initialize()
-    store()
-
-    while t < TFinal
-        t += 1
-        evolve(t)
-        store()
-    end
-
-    visualize(TFinal)
-
-    if CSV != false
-        CSV.write("/Outputs/Data.csv")
-
-end
-
-#                   --------------------------------------------------                   #
-
-function store()
+function store(t,Planet)
     push!(Monitor, [t, 
                 Planet.ocean.volume, 
                 Planet.NMass,
@@ -88,6 +64,27 @@ function store()
                 Planet.atmosphere.NMass,
                 Planet.mantle.Nfraction, 
                 Planet.mantle.NMass])
+end
+
+#                   --------------------------------------------------                   #
+
+function RunModel(TFinal = 100,t=0,CSV = false)
+
+    initialize()
+    store(t,Planet)
+
+    while t < TFinal
+        t += 1
+        evolve(t)
+        store(t,Planet)
+    end
+
+    include("Visualization/Plot.jl")
+    visualize(TFinal)
+
+    if CSV != false
+        CSV.write("/Outputs/Data.csv")
+
 end
 
 #                   --------------------------------------------------                   #
