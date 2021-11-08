@@ -50,13 +50,12 @@ else
     years = readline()
     years = parse(Int64,years)
     
-    print("Please choose whether to write to csv [0,1]:")
+    print("Please choose whether to write to csv [true,false]:")
     print_csv = readline()
-    print_csv = parse(Int64,print_csv)
-    print_csv = convert(Bool,print_csv)
 
-    print("Model currently running...")
-    RunModel(TFinal = years,PrintCSV = print_csv)
+    print("Beginning Model...")
+    RunModel(TFinal=years,PrintCSV=print_csv)
+    
     print("Model complete please look at output folder for data and plots.")
 end 
     
@@ -83,15 +82,16 @@ function initialize()
                            ocean = Ocean(volume = 1.3e18,NMass = 2.4e16),
                            crust = Crust(NMass = 1.9e18),
                            mantle = Mantle(NMass = 4e18),
-                           atmosphere = Atmosphere(Mass = 4e18,NMass = 2.8e19),
-                           NMass = (Planet.ocean.NMass + Planet.crust.NMass + 
-                                    Planet.mantle.NMass + Planet.atmosphere.NMass))
+                           atmosphere = Atmosphere(Mass = 4e18,NMass = 2.8e19))
+
+    Planet.NMass = (Planet.ocean.NMass + Planet.crust.NMass + Planet.mantle.NMass + Planet.atmosphere.NMass)
 
     Planet.ocean.Nfraction = Planet.ocean.NMass/Planet.NMass
     Planet.crust.Nfraction = Planet.crust.NMass/Planet.NMass
     Planet.mantle.Nfraction = Planet.mantle.NMass/Planet.NMass
     Planet.atmosphere.Nfraction = Planet.atmosphere.NMass/Planet.NMass
 
+    return Monitor,Planet
 end
 
 #                   --------------------------------------------------                   #
@@ -126,48 +126,57 @@ end
 
 #                   --------------------------------------------------                   #
 
-function RunModel(TFinal = 100,t=0,PrintCSV = false)
-
-    initialize()
-    store(t,Planet,Monitor)
-    print("Inialization complete")
+function RunModel(TFinal::Int64)
     
+    t = 0
     while t < TFinal
-        t += 1
-        evolve(t)
-        store(t,Planet,Monitor)
+        
+        if t == 0
 
-        if t > Int(TFinal/10)
-            print("10% complete...")
-        elseif t > 2*Int(TFinal/10)
-            print("20% complete...")
-        elseif t > 3*Int(TFinal/10)
-            print("30% complete...")
-        elseif t > 4*Int(TFinal/10)
-            print("40% complete...")
-        elseif t > 5*Int(TFinal/10)
-            print("50% complete...")
-        elseif t > 6*Int(TFinal/10)
-            print("60% complete...")
-        elseif t > 7*Int(TFinal/10)
-            print("70% complete...")
-        elseif t > 8*Int(TFinal/10)
-            print("80% complete...")
-        elseif t > 9*Int(TFinal/10)
-            print("90% complete...")
+            Monitor,Planet = initialize()
+            store(t,Planet,Monitor)
+            print("Inialization complete")
+            t += 1 # initial values stored in timestep 0 so first that t represents
+                    # completed years
         else
-            print("")
+            
+            evolve(t)
+            store(t,Planet,Monitor)
+
+            t += 1
+
+            if t > Int(TFinal/10)
+                print("10% complete...")
+            elseif t > 2*Int(TFinal/10)
+                print("20% complete...")
+            elseif t > 3*Int(TFinal/10)
+                print("30% complete...")
+            elseif t > 4*Int(TFinal/10)
+                print("40% complete...")
+            elseif t > 5*Int(TFinal/10)
+                print("50% complete...")
+            elseif t > 6*Int(TFinal/10)
+                print("60% complete...")
+            elseif t > 7*Int(TFinal/10)
+                print("70% complete...")
+            elseif t > 8*Int(TFinal/10)
+                print("80% complete...")
+            elseif t > 9*Int(TFinal/10)
+                print("90% complete...")
+            else
+                print("")
+            end
         end
     end
-
+        
+    # Visualize if the model has completed the proper number of runs
     if t == TFinal
         visualize(TFinal)
 
-        if PrintCSV == true
-            CSV.write("/Outputs/Data.csv")
-        
+        CSV.write("/Outputs/Data.csv")
+        print("Model data saved in /Outputs/Data.csv")
+    
         return print("Model Complete")
-        end
     end
 end
 
