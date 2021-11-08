@@ -1,4 +1,4 @@
-##----------------------------------------------------------------------------##
+##---------------------------------------------------------------------------------------##
 #
 # List of Processes
 #
@@ -24,7 +24,7 @@ Pkg.add("Random")
 using PeriodicTable
 using Random
 
-#                   --------------------------------------------------                   #
+#                   --------------------------------------------------                    #
 
 function F_Crust_Ocean() 
 
@@ -95,6 +95,7 @@ function F_Meteor(t)
     tao = 150
 
     Planet.atmosphere.NMass += N0*(N1-N0)*exp(-t/tao)
+    Planet.Mass += N0*(N1-N0)*exp(-t/tao)
 
 end
 
@@ -117,6 +118,7 @@ function F_Henry()
     else
         Planet.ocean.NMass = Planet.ocean.NMass + Cdelta*Planet.ocean.volume
         Planet.atmosphere.NMass = Planet.atmosphere.NMass - Cdelta*Planet.ocean.volume
+    end
 
 end
 
