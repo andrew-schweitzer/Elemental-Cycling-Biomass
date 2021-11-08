@@ -29,7 +29,7 @@ include("Visualization/Plot.jl")
 #####--------------------------------------------------------------------------------#####
 #####--------------------------------------------------------------------------------#####
 
-#= print("Welcome to the Elemental Cycling Model!",
+print("Welcome to the Elemental Cycling Model!",
       "\nPlease Indicate from the below list what to do next:",
       "\n1 : Need inputs",
       "\n2 : Input variables")
@@ -47,15 +47,18 @@ if option == 1
 else
 
     print("Please indicate the time length for model as a positive integer:")
-    TFinal = readline()
-    TFinal = parse(Int64,TFinal)
+    years = readline()
+    years = parse(Int64,years)
     
-    print("Please choose whether to write to csv [true,false]:")
-    CSV = readline()
+    print("Please choose whether to write to csv [0,1]:")
+    print_csv = readline()
+    print_csv = parse(Int64,print_csv)
+    print_csv = convert(Bool,print_csv)
 
     print("Model currently running...")
-    RunModel(TFinal,CSV)
-    print("Model complete please look at output folder for data and plots.") =#
+    RunModel(TFinal = years,PrintCSV = print_csv)
+    print("Model complete please look at output folder for data and plots.")
+end 
     
 #####--------------------------------------------------------------------------------#####
 #####--------------------------------------------------------------------------------#####
@@ -107,38 +110,65 @@ end
 
 #                   --------------------------------------------------                   #
 
-function store(t,Planet)
+function store(t,Planet,Monitor)
     push!(Monitor, [t, 
-                Planet.ocean.volume, 
-                Planet.NMass,
-                Planet.ocean.Nfraction, 
-                Planet.ocean.NMass,
-                Planet.crust.Nfraction, 
-                Planet.crust.NMass,
-                Planet.atmosphere.Nfraction, 
-                Planet.atmosphere.NMass,
-                Planet.mantle.Nfraction, 
-                Planet.mantle.NMass])
+                    Planet.ocean.volume, 
+                    Planet.NMass,
+                    Planet.ocean.Nfraction, 
+                    Planet.ocean.NMass,
+                    Planet.crust.Nfraction, 
+                    Planet.crust.NMass,
+                    Planet.atmosphere.Nfraction, 
+                    Planet.atmosphere.NMass,
+                    Planet.mantle.Nfraction, 
+                    Planet.mantle.NMass])
 end
 
 #                   --------------------------------------------------                   #
 
-function RunModel(TFinal = 100,t=0,CSV = false)
+function RunModel(TFinal = 100,t=0,PrintCSV = false)
 
     initialize()
-    store(t,Planet)
-
+    store(t,Planet,Monitor)
+    print("Inialization complete")
+    
     while t < TFinal
         t += 1
         evolve(t)
-        store(t,Planet)
+        store(t,Planet,Monitor)
+
+        if t > Int(TFinal/10)
+            print("10% complete...")
+        elseif t > 2*Int(TFinal/10)
+            print("20% complete...")
+        elseif t > 3*Int(TFinal/10)
+            print("30% complete...")
+        elseif t > 4*Int(TFinal/10)
+            print("40% complete...")
+        elseif t > 5*Int(TFinal/10)
+            print("50% complete...")
+        elseif t > 6*Int(TFinal/10)
+            print("60% complete...")
+        elseif t > 7*Int(TFinal/10)
+            print("70% complete...")
+        elseif t > 8*Int(TFinal/10)
+            print("80% complete...")
+        elseif t > 9*Int(TFinal/10)
+            print("90% complete...")
+        else
+            print("")
+        end
     end
 
-    visualize(TFinal)
+    if t == TFinal
+        visualize(TFinal)
 
-    if CSV != false
-        CSV.write("/Outputs/Data.csv")
-
+        if PrintCSV == true
+            CSV.write("/Outputs/Data.csv")
+        
+        return print("Model Complete")
+        end
+    end
 end
 
 #                   --------------------------------------------------                   #
