@@ -29,6 +29,44 @@ include("Visualization/Plot.jl")
 #####--------------------------------------------------------------------------------#####
 #####--------------------------------------------------------------------------------#####
 
+print("Welcome to the Elemental Cycling Model!",
+      "\nPlease Indicate from the below list what to do next:",
+      "\n1 : Need inputs",
+      "\n2 : Input variables")
+
+option = readline()
+
+if option == 1
+
+    print("The inputs for the model are:",
+          "TFinal = 0 [total years for model to run]",
+          "t = 0 [starting time]",
+          "CSV = false [true will write data to csv in output folder]")
+else
+    error = false
+    print("Please indicate the time length for model as a positive integer:")
+    TFinal = readline()
+
+    if typeof(TFinal) != Int
+        error("Type error, input was not an integer.")
+
+        error = true
+    
+    print("Please choose whether to write to csv [true,false]:")
+    CSV = readline()
+
+    if typeof(CSV) != Bool
+        error("Type error, input was not an Boolean.")
+
+        error = true
+
+    if error == false
+
+        RunModel(TFinal,CSV)
+    
+#####--------------------------------------------------------------------------------#####
+#####--------------------------------------------------------------------------------#####
+
 function initialize()
 
     #initialize dataframe to track changes

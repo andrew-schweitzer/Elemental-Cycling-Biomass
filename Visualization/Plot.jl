@@ -37,9 +37,9 @@ function VisualizeNMassOverTime()
 
     NitogenMassPlot = line(x = Monitor[time], 
                            hcat(Monitor[AtmosphereNMass],
-                           Monitor[OceanNMass],
-                           Monitor[CrustNMass],
-                           Monitor[MantleNMass]))
+                                Monitor[OceanNMass],
+                                Monitor[CrustNMass],
+                                Monitor[MantleNMass]))
 
     title!(NitogenMassPlot, text = "Nitrogen Mass by Resevoir Time Series")
     filename = "/Outputs/NitogenMassPlot.png"
@@ -68,7 +68,7 @@ function VisualizeGlobalNDistribution(PlotSteps)
         pie_chart = pie(x,y)
         title!(pie_chart, 
                text = "Global Nitrogen Distribution by Resevoir",
-               subtext = "Time: " + str(step))
+               subtext = "Year: " + str(step))
         savefig(pie_chart,filename)
 
     end
