@@ -1,11 +1,35 @@
+#####--------------------------------------------------------------------------------#####
+#####--------------------------------------------------------------------------------#####
+
+using Pkg
+Pkg.add("Classes")
+Pkg.add("Parameters")
+Pkg.add("DataFrames")
+Pkg.add("StaticArrays")
+Pkg.add("CSV")
+Pkg.add("ECharts")
 
 #                   --------------------------------------------------                   #
 
-function initialize()
+using Parameters
+using Classes
+using DataFrames
+using StaticArrays
+using DelimitedFiles
+using CSV
+using ECharts
 
-    include("src/classes.jl")
-    include("src/Processes.jl")
-    
+
+#                   --------------------------------------------------                   #
+
+include("src/classes.jl")
+include("src/Processes.jl")
+include("Visualization/Plot.jl")
+
+#####--------------------------------------------------------------------------------#####
+#####--------------------------------------------------------------------------------#####
+
+function initialize()
 
     #initialize dataframe to track changes
 
@@ -79,7 +103,6 @@ function RunModel(TFinal = 100,t=0,CSV = false)
         store(t,Planet)
     end
 
-    include("Visualization/Plot.jl")
     visualize(TFinal)
 
     if CSV != false

@@ -1,14 +1,9 @@
 #                   --------------------------------------------------                    #
 
-using Pkg
-Pkg.add("ECharts")
-
-#                   --------------------------------------------------                    #
-
 function visualize(TFinal)
 
     PlotSteps = range(1,TFinal,step = (TFinal/10))
-    
+
     VisualizeNFractionOverTime()
     VisualizeNMassOverTime()
     VisualizeGlobalNDistribution(PlotSteps)
@@ -41,10 +36,10 @@ function VisualizeNMassOverTime()
     # This is the Nitrogen Mass by Reservoir Time Series
 
     NitogenMassPlot = line(x = Monitor[time], 
-                               hcat(Monitor[AtmosphereNMass],
-                                    Monitor[OceanNMass],
-                                    Monitor[CrustNMass],
-                                    Monitor[MantleNMass]))
+                           hcat(Monitor[AtmosphereNMass],
+                           Monitor[OceanNMass],
+                           Monitor[CrustNMass],
+                           Monitor[MantleNMass]))
 
     title!(NitogenMassPlot, text = "Nitrogen Mass by Resevoir Time Series")
     filename = "/Outputs/NitogenMassPlot.png"
