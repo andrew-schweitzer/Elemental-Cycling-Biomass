@@ -52,7 +52,7 @@ end
 
 #                   --------------------------------------------------                   #
 
-function Model(Tfinal = 100,t=0)
+function RunModel(TFinal = 100,t=0,CSV = false)
 
     include("src/classes.jl")
     include("src/Processes.jl")
@@ -61,13 +61,16 @@ function Model(Tfinal = 100,t=0)
     initialize()
     store()
 
-    while t < Tfinal
+    while t < TFinal
         t += 1
         evolve(t)
         store()
     end
 
-    # visualize()
+    visualize(TFinal)
+
+    if CSV != false
+        CSV.write("/Outputs/Data.csv")
 
 end
 
