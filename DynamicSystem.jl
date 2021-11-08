@@ -62,7 +62,9 @@ else
 
     if error == false
 
+        print("Model currently running...")
         RunModel(TFinal,CSV)
+        print("Model complete please look at output folder for data and plots.")
     
 #####--------------------------------------------------------------------------------#####
 #####--------------------------------------------------------------------------------#####
