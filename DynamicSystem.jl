@@ -29,12 +29,13 @@ include("Visualization/Plot.jl")
 #####--------------------------------------------------------------------------------#####
 #####--------------------------------------------------------------------------------#####
 
-print("Welcome to the Elemental Cycling Model!",
+#= print("Welcome to the Elemental Cycling Model!",
       "\nPlease Indicate from the below list what to do next:",
       "\n1 : Need inputs",
       "\n2 : Input variables")
 
 option = readline()
+option = parse(Int64,option)
 
 if option == 1
 
@@ -42,29 +43,19 @@ if option == 1
           "TFinal = 0 [total years for model to run]",
           "t = 0 [starting time]",
           "CSV = false [true will write data to csv in output folder]")
+
 else
-    error = false
+
     print("Please indicate the time length for model as a positive integer:")
     TFinal = readline()
-
-    if typeof(TFinal) != Int
-        error("Type error, input was not an integer.")
-
-        error = true
+    TFinal = parse(Int64,TFinal)
     
     print("Please choose whether to write to csv [true,false]:")
     CSV = readline()
 
-    if typeof(CSV) != Bool
-        error("Type error, input was not an Boolean.")
-
-        error = true
-
-    if error == false
-
-        print("Model currently running...")
-        RunModel(TFinal,CSV)
-        print("Model complete please look at output folder for data and plots.")
+    print("Model currently running...")
+    RunModel(TFinal,CSV)
+    print("Model complete please look at output folder for data and plots.") =#
     
 #####--------------------------------------------------------------------------------#####
 #####--------------------------------------------------------------------------------#####
