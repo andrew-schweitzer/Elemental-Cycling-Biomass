@@ -54,7 +54,7 @@ else
     print_csv = readline()
 
     print("Beginning Model...")
-    RunModel(TFinal=years,PrintCSV=print_csv)
+    RunModel(years)
     
     print("Model complete please look at output folder for data and plots.")
 end 
@@ -78,11 +78,13 @@ function initialize()
                     MantleNMass = BigFloat[],
                     NMassTotal = BigFloat[])   
 
-    Planet = PlanetaryBody(Mass = 6e24,
-                           ocean = Ocean(volume = 1.3e18,NMass = 2.4e16),
-                           crust = Crust(NMass = 1.9e18),
-                           mantle = Mantle(NMass = 4e18),
-                           atmosphere = Atmosphere(Mass = 4e18,NMass = 2.8e19))
+    scale = 1e16
+
+    Planet = PlanetaryBody(Mass = (6e24)/scale,
+                           ocean = Ocean(volume = (1.3e18)/scale,NMass = (2.4e16)/scale),
+                           crust = Crust(NMass = (1.9e18)/scale),
+                           mantle = Mantle(NMass = (4e18)/scale),
+                           atmosphere = Atmosphere(Mass = (4e18)/scale,NMass = (2.8e19)/scale))
 
     Planet.NMass = (Planet.ocean.NMass + Planet.crust.NMass + Planet.mantle.NMass + Planet.atmosphere.NMass)
 
@@ -96,15 +98,15 @@ end
 
 #                   --------------------------------------------------                   #
 
-function evolve(t)
+function evolve(t,Planet)
 
-    F_Crust_Ocean()
-    F_Crust_Mantle()
-    F_Ocean_Crust()
-    F_Mantle_Atmosphere()
-    F_Mantle_Ocean(t)
-    F_Henry()
-    F_Meteor(t)
+    F_Crust_Ocean(Planet)
+    F_Crust_Mantle(Planet)
+    F_Ocean_Crust(Planet)
+    F_Mantle_Atmosphere(Planet)
+    F_Mantle_Ocean(t,Planet)
+    F_Henry(Planet)
+    F_Meteor(t,Planet)
 
 end
 
@@ -126,57 +128,61 @@ end
 
 #                   --------------------------------------------------                   #
 
-function RunModel(TFinal::Int64)
+function RunModel(years)
     
     t = 0
+    Monitor,Planet = initialize()
+    store(t,Planet,Monitor)
+    print("Inialization complete")
+    t += 1 # initial values stored in timestep 0 so first that t represents
+           # completed years
+    
+    TFinal = years
     while t < TFinal
         
-        if t == 0
+        evolve(t,Planet)
+        store(t,Planet,Monitor)
 
-            Monitor,Planet = initialize()
-            store(t,Planet,Monitor)
-            print("Inialization complete")
-            t += 1 # initial values stored in timestep 0 so first that t represents
-                    # completed years
+        t += 1
+
+        if t == Int(years/10)
+            #allow used to check model progression
+            print("10% complete...")
+        elseif t == 2*Int(years/10)
+            #allow used to check model progression
+            print("20% complete...")
+        elseif t == 3*Int(years/10)
+            #allow used to check model progression
+            print("30% complete...")
+        elseif t == 4*Int(years/10)
+            #allow used to check model progression
+            print("40% complete...")
+        elseif t == 5*Int(years/10)
+            #allow used to check model progression
+            print("50% complete...")
+        elseif t == 6*Int(years/10)
+            #allow used to check model progression
+            print("60% complete...")
+        elseif t == 7*Int(years/10)
+            #allow used to check model progression
+            print("70% complete...")
+        elseif t == 8*Int(years/10)
+            #allow used to check model progression
+            print("80% complete...")
+        elseif t == 9*Int(years/10)
+            #allow used to check model progression
+            print("90% complete...")
         else
+            # Visualize if the model has completed the proper number of runs
+            if t == TFinal
+                visualize(TFinal)
+        
+                CSV.write("/Outputs/Data.csv")
+                print("Model data saved in /Outputs/Data.csv")
             
-            evolve(t)
-            store(t,Planet,Monitor)
-
-            t += 1
-
-            if t > Int(TFinal/10)
-                print("10% complete...")
-            elseif t > 2*Int(TFinal/10)
-                print("20% complete...")
-            elseif t > 3*Int(TFinal/10)
-                print("30% complete...")
-            elseif t > 4*Int(TFinal/10)
-                print("40% complete...")
-            elseif t > 5*Int(TFinal/10)
-                print("50% complete...")
-            elseif t > 6*Int(TFinal/10)
-                print("60% complete...")
-            elseif t > 7*Int(TFinal/10)
-                print("70% complete...")
-            elseif t > 8*Int(TFinal/10)
-                print("80% complete...")
-            elseif t > 9*Int(TFinal/10)
-                print("90% complete...")
-            else
-                print("")
+                return print("Model Complete")
             end
         end
-    end
-        
-    # Visualize if the model has completed the proper number of runs
-    if t == TFinal
-        visualize(TFinal)
-
-        CSV.write("/Outputs/Data.csv")
-        print("Model data saved in /Outputs/Data.csv")
-    
-        return print("Model Complete")
     end
 end
 
