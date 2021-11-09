@@ -5,7 +5,6 @@ using Pkg
 Pkg.add("Classes")
 Pkg.add("Parameters")
 Pkg.add("DataFrames")
-Pkg.add("StaticArrays")
 Pkg.add("CSV")
 Pkg.add("ECharts")
 
@@ -14,7 +13,6 @@ Pkg.add("ECharts")
 using Parameters
 using Classes
 using DataFrames
-using StaticArrays
 using DelimitedFiles
 using CSV
 using ECharts

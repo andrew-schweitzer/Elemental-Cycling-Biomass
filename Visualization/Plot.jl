@@ -1,20 +1,20 @@
 #                   --------------------------------------------------                    #
 
-function visualize(TFinal)
+function visualize(years,Monitor)
 
-    PlotSteps = range(1,TFinal,step = (TFinal/10))
+    PlotSteps = range(1,years,step = (years/10))
 
-    VisualizeNFractionOverTime()
-    VisualizeNMassOverTime()
-    VisualizeGlobalNDistribution(PlotSteps)
+    VisualizeNFractionOverTime(Monitor)
+    VisualizeNMassOverTime(Monitor)
+    VisualizeGlobalNDistribution(PlotSteps,Monitor)
     
 
 end
 
 #                   --------------------------------------------------                    #
 
-function VisualizeNFractionOverTime()
-    NitrogenDistributionPlot = bar(x = Monitor[time], 
+function VisualizeNFractionOverTime(Monitor)
+    NitrogenDistributionPlot = Bar(x = Monitor[time], 
                                    hcat(Monitor[AtmosphereNFraction], 
                                         Monitor[OceanNFraction], 
                                         Monitor[CrustNFraction],
@@ -30,7 +30,7 @@ end
 
 #                   --------------------------------------------------                    #
 
-function VisualizeNMassOverTime()
+function VisualizeNMassOverTime(Monitor)
 
     # Looks at the mass of Nitrogen in each resevoir and plots it along the time step.
     # This is the Nitrogen Mass by Reservoir Time Series
@@ -49,7 +49,7 @@ end
 
 #                   --------------------------------------------------                    #
 
-function VisualizeGlobalNDistribution(PlotSteps)
+function VisualizeGlobalNDistribution(PlotSteps,Monitor)
 
     # pie plot to show distribution at each 10% time step.
     # useful to view as a series to see larger time shifts 
