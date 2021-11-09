@@ -173,7 +173,7 @@ function RunModel(years)
         else
             # Visualize if the model has completed the proper number of runs
             if t == TFinal
-                visualize(TFinal)
+                visualize(years,Monitor)
         
                 CSV.write("/Outputs/Data.csv")
                 print("Model data saved in /Outputs/Data.csv")

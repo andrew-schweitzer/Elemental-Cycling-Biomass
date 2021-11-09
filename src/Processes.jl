@@ -103,7 +103,7 @@ end
 
 function F_Henry(Planet) 
 
-    AtomicMassN2 = 2 * elements[8].atomic_mass / 1000 # g/mol
+    AtomicMassN2 = 2 * 16 / 1000 # g/mol
 
     Kmol = 1600 # L*Atm/mol
     Kkg = 1600 / AtomicMassN2 #changed units -> L*Atm/kg
