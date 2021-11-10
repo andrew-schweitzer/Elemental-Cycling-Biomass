@@ -5,8 +5,10 @@ using Pkg
 Pkg.add("Classes")
 Pkg.add("Parameters")
 Pkg.add("DataFrames")
+Pkg.add("StaticArrays")
 Pkg.add("CSV")
 Pkg.add("ECharts")
+Pkg.add("Plots")
 
 #                   --------------------------------------------------                   #
 
@@ -16,6 +18,8 @@ using DataFrames
 using DelimitedFiles
 using CSV
 using ECharts
+using StaticArrays
+using Plots
 
 
 #                   --------------------------------------------------                   #
@@ -65,31 +69,32 @@ function initialize()
     #initialize dataframe to track changes
 
     Monitor = DataFrame(time = Int64[],
-                    VOcean = BigFloat[],
+                    VOcean = Float64[],
                     OceanNFraction = Float64[],
-                    OceanNMass = BigFloat[],
+                    OceanNMass = Float64[],
                     CrustNFraction = Float64[],
-                    CrustNMass = BigFloat[],
+                    CrustNMass = Float64[],
                     AtmosphereNFraction = Float64[],
-                    AtmosphereNMass = BigFloat[],
+                    AtmosphereNMass = Float64[],
                     MantleNFraction = Float64[],
-                    MantleNMass = BigFloat[],
-                    NMassTotal = BigFloat[])   
+                    MantleNMass = Float64[],
+                    NMassTotal = Float64[])   
 
-    scale = 1e16
+    # Due to dimensional consraints within julia to perform calculations the log base 10 was taken.
 
-    Planet = PlanetaryBody(Mass = (6e24)/scale,
-                           ocean = Ocean(volume = (1.3e18)/scale,NMass = (2.4e16)/scale),
-                           crust = Crust(NMass = (1.9e18)/scale),
-                           mantle = Mantle(NMass = (4e18)/scale),
-                           atmosphere = Atmosphere(Mass = (4e18)/scale,NMass = (2.8e19)/scale))
+    Planet = PlanetaryBody(Mass = log10(6e24),
+                           ocean = Ocean(volume = log10(1.3e18),NMass = log10(2.4e16)),
+                           crust = Crust(NMass = log10(1.9e18)),
+                           mantle = Mantle(NMass = log10(4e18)),
+                           atmosphere = Atmosphere(Mass = log10(4e18),NMass = log10(2.8e19)))
 
-    Planet.NMass = (Planet.ocean.NMass + Planet.crust.NMass + Planet.mantle.NMass + Planet.atmosphere.NMass)
+    Planet.NMass = log10(10^Planet.ocean.NMass + 10^Planet.crust.NMass + 
+                         10^Planet.mantle.NMass + 10^Planet.atmosphere.NMass)
 
-    Planet.ocean.Nfraction = Planet.ocean.NMass/Planet.NMass
-    Planet.crust.Nfraction = Planet.crust.NMass/Planet.NMass
-    Planet.mantle.Nfraction = Planet.mantle.NMass/Planet.NMass
-    Planet.atmosphere.Nfraction = Planet.atmosphere.NMass/Planet.NMass
+    Planet.ocean.Nfraction = 10^(Planet.ocean.NMass - Planet.NMass)
+    Planet.crust.Nfraction = 10^(Planet.crust.NMass - Planet.NMass)
+    Planet.mantle.Nfraction = 10^(Planet.mantle.NMass - Planet.NMass)
+    Planet.atmosphere.Nfraction = 10^(Planet.atmosphere.NMass - Planet.NMass)
 
     return Monitor,Planet
 end
@@ -106,79 +111,96 @@ function evolve(t,Planet)
     F_Henry(Planet)
     F_Meteor(t,Planet)
 
+    Planet.ocean.Nfraction = 10^(Planet.ocean.NMass - Planet.NMass)
+    Planet.crust.Nfraction = 10^(Planet.crust.NMass - Planet.NMass)
+    Planet.mantle.Nfraction = 10^(Planet.mantle.NMass - Planet.NMass)
+    Planet.atmosphere.Nfraction = 10^(Planet.atmosphere.NMass - Planet.NMass)
+
+    return Planet
+
 end
 
 #                   --------------------------------------------------                   #
 
 function store(t,Planet,Monitor)
-    push!(Monitor, [t, 
-                    Planet.ocean.volume, 
-                    Planet.NMass,
-                    Planet.ocean.Nfraction, 
-                    Planet.ocean.NMass,
-                    Planet.crust.Nfraction, 
-                    Planet.crust.NMass,
-                    Planet.atmosphere.Nfraction, 
-                    Planet.atmosphere.NMass,
-                    Planet.mantle.Nfraction, 
-                    Planet.mantle.NMass])
+    push!(Monitor,[t, Planet.ocean.volume, Planet.NMass, Planet.ocean.Nfraction,
+                   Planet.ocean.NMass, Planet.crust.Nfraction, Planet.crust.NMass,
+                   Planet.atmosphere.Nfraction, Planet.atmosphere.NMass,
+                   Planet.mantle.Nfraction, Planet.mantle.NMass])
+    return Monitor
 end
 
 #                   --------------------------------------------------                   #
 
-function RunModel(years)
+function RunModel(years::Int64)
     
     t = 0
     Monitor,Planet = initialize()
-    store(t,Planet,Monitor)
-    print("Inialization complete")
+    Monitor = store(t,Planet,Monitor)
+
+    print("Inialization complete\n")
     t += 1 # initial values stored in timestep 0 so first that t represents
            # completed years
     
-    TFinal = years
-    while t < TFinal
+    print("\n t:",t)
+    print("\n years:",years)
+
+    
+    while t < years
         
-        evolve(t,Planet)
-        store(t,Planet,Monitor)
+        Planet = evolve(t,Planet)
+        Monitor = store(t,Planet,Monitor)
 
         t += 1
+        
 
-        if t == Int(years/10)
+        TenPercent = convert(Int64,round(years/10))
+        print("\n t:",t)
+
+
+
+        if t == TenPercent
             #allow used to check model progression
-            print("10% complete...")
-        elseif t == 2*Int(years/10)
+            print("\n10% complete...\n")
+        elseif t == 2*TenPercent
             #allow used to check model progression
-            print("20% complete...")
-        elseif t == 3*Int(years/10)
+            print("\n20% complete...\n")
+        elseif t == 3*TenPercent
             #allow used to check model progression
-            print("30% complete...")
-        elseif t == 4*Int(years/10)
+            print("\n30% complete...\n")
+        elseif t == 4*TenPercent
             #allow used to check model progression
-            print("40% complete...")
-        elseif t == 5*Int(years/10)
+            print("\n40% complete...\n")
+        elseif t == 5*TenPercent
             #allow used to check model progression
-            print("50% complete...")
-        elseif t == 6*Int(years/10)
+            print("\n50% complete...\n")
+        elseif t == 6*TenPercent
             #allow used to check model progression
-            print("60% complete...")
-        elseif t == 7*Int(years/10)
+            print("\n60% complete...\n")
+        elseif t == 7*TenPercent
             #allow used to check model progression
-            print("70% complete...")
-        elseif t == 8*Int(years/10)
+            print("\n70% complete...\n")
+        elseif t == 8*TenPercent
             #allow used to check model progression
-            print("80% complete...")
-        elseif t == 9*Int(years/10)
+            print("\n80% complete...\n")
+        elseif t == 9*TenPercent
             #allow used to check model progression
-            print("90% complete...")
+            print("\n90% complete...\n")
         else
             # Visualize if the model has completed the proper number of runs
-            if t == TFinal
-                visualize(years,Monitor)
+            #= if t == TFinal
+                
         
-                CSV.write("/Outputs/Data.csv")
-                print("Model data saved in /Outputs/Data.csv")
+                
             
                 return print("Model Complete")
+            end =#
+            if t == years
+                visualize(years,Monitor)
+                CSV.write("/home/andrew/Desktop/Elemental-Cycling-Biomass/Outputs/Data.csv",Monitor)
+                print("\n\nModel Complete\n")
+                print("\nModel data saved in /Outputs/Data.csv\n\n")
+                return Planet,Monitor
             end
         end
     end

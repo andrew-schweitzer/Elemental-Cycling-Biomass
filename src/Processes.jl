@@ -18,10 +18,10 @@
 #
 ##---------------------------------------------------------------------------------------##
 
-using Pkg
-Pkg.add("PeriodicTable")
+#using Pkg
+#Pkg.add("PeriodicTable")
 Pkg.add("Random")
-using PeriodicTable
+#using PeriodicTable
 using Random
 
 #                   --------------------------------------------------                    #
@@ -51,11 +51,11 @@ end
 
 function F_Ocean_Crust(Planet)
 
-    VSed = 6.1e17
+    VSed = log10(6.1e17)
     Rho = 1700
     Kf = 0.001
 
-    F = 0.001*(VSed/Planet.ocean.volume*Rho*Kf)
+    F = 0.001*(VSed - (Planet.ocean.volume*Rho*Kf))
 
     Planet.crust.NMass -= F
     Planet.ocean.NMass += F
@@ -66,7 +66,7 @@ end
 
 function F_Mantle_Atmosphere(Planet) 
 
-    delta = 1e6 * rand(2800:3000) 
+    delta = log10(1e6 * rand(2800:3000))
 
     Planet.crust.NMass -= delta
     Planet.ocean.NMass += delta
@@ -77,12 +77,10 @@ end
 
 function F_Mantle_Ocean(t,Planet) 
 
-    N0 = 10e-8
-    N1 = 3e-8
     tao = 1e9
 
-    Planet.mantle.NMass -= N0*(N1-N0)*exp(-t/tao)
-    Planet.ocean.NMass += N0*(N1-N0)*exp(-t/tao)
+    Planet.mantle.NMass -= -8*log10(1 + 2*exp(-t/tao))
+    Planet.ocean.NMass += -8*log10(1 + 2*exp(-t/tao))
 
 end
 
@@ -92,10 +90,11 @@ function F_Meteor(t,Planet)
 
     N0 = 2.4e5
     N1 = 2.4e8
+    Ndelta = 2.3976e8
     tao = 150
 
-    Planet.atmosphere.NMass += N0*(N1-N0)*exp(-t/tao)
-    Planet.Mass += N0*(N1-N0)*exp(-t/tao)
+    Planet.atmosphere.NMass += 5*log10( 2.4*( 1 + 1000*exp(-t/tao) ) )
+    Planet.Mass += 5*log10( 2.4*( 1 + 1000*exp(-t/tao) ) )
 
 end
 
