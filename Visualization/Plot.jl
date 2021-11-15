@@ -1,45 +1,44 @@
 #                   --------------------------------------------------                    #
 
-function visualize(TFinal)
+function visualize(years,Monitor)
 
-    PlotSteps = range(1,TFinal,step = (TFinal/10))
+    #PlotSteps = range(1,convert(Int64,years),step = convert(Int64,round(years/10)) )
 
-    VisualizeNFractionOverTime()
-    VisualizeNMassOverTime()
-    VisualizeGlobalNDistribution(PlotSteps)
+    VisualizeNFractionOverTime(Monitor)
+    VisualizeNMassOverTime(Monitor)
+    #VisualizeGlobalNDistribution(PlotSteps,Monitor)
     
 
 end
 
 #                   --------------------------------------------------                    #
 
-function VisualizeNFractionOverTime()
-    NitrogenDistributionPlot = bar(x = Monitor[time], 
-                                   hcat(Monitor[AtmosphereNFraction], 
-                                        Monitor[OceanNFraction], 
-                                        Monitor[CrustNFraction],
-                                        Monitor[MantleNFraction]), 
+function VisualizeNFractionOverTime(Monitor)
+    NitrogenDistributionPlot = bar(Monitor.time, 
+                                   hcat(Monitor.AtmosphereNFraction, 
+                                        Monitor.OceanNFraction, 
+                                        Monitor.CrustNFraction,
+                                        Monitor.MantleNFraction), 
                                    color = ["grey", "blue", "brown","red"], 
                                    stack = true)
     title!(NitrogenDistributionPlot, 
            text = "Nitrogen Fraction of Global Nitrogen mass by Resevoir Time Series")
-    filename = "/Outputs/NitrogenDistributionPlot.png"
-    savefig(NitrogenDistributionPlot,filename)         
+    filename = "/home/andrew/Desktop/Elemental-Cycling-Biomass/Outputs/NitrogenDistributionPlot.png"
+    savefig(filename,NitrogenDistributionPlot)         
 
 end
 
 #                   --------------------------------------------------                    #
 
-function VisualizeNMassOverTime()
+function VisualizeNMassOverTime(Monitor)
 
     # Looks at the mass of Nitrogen in each resevoir and plots it along the time step.
     # This is the Nitrogen Mass by Reservoir Time Series
 
-    NitogenMassPlot = line(x = Monitor[time], 
-                           hcat(Monitor[AtmosphereNMass],
-                                Monitor[OceanNMass],
-                                Monitor[CrustNMass],
-                                Monitor[MantleNMass]))
+    NitogenMassPlot = line(Monitor[time], hcat(Monitor.AtmosphereNMass, 
+                                                Monitor.OceanNMass, 
+                                                Monitor.CrustNMass,
+                                                Monitor.MantleNMass) )
 
     title!(NitogenMassPlot, text = "Nitrogen Mass by Resevoir Time Series")
     filename = "/Outputs/NitogenMassPlot.png"
@@ -49,7 +48,7 @@ end
 
 #                   --------------------------------------------------                    #
 
-function VisualizeGlobalNDistribution(PlotSteps)
+function VisualizeGlobalNDistribution(PlotSteps,Monitor)
 
     # pie plot to show distribution at each 10% time step.
     # useful to view as a series to see larger time shifts 
