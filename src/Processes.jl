@@ -1,30 +1,29 @@
-##---------------------------------------------------------------------------------------##
-#
-# List of Processes
-#
-#   F_Crust_Ocean:
-#       
-#   F_Crust_Mantle:
-#       
-#   F_Ocean_Crust:
-#       
-#   F_Mantle_Atmosphere:
-#       
-#   F_Mantle_Ocean:
-#
-#   F_Henry:
-#
-#   F_Meteor:
-#
-##---------------------------------------------------------------------------------------##
+#####--------------------------------------------------------------------------------#####
+#####--------------------------------------------------------------------------------#####
 
-#using Pkg
-#Pkg.add("PeriodicTable")
-Pkg.add("Random")
-#using PeriodicTable
-using Random
 
-#                   --------------------------------------------------                    #
+using Pkg
+Pkg.add("Classes")
+Pkg.add("Parameters")
+Pkg.add("DataFrames")
+Pkg.add("StaticArrays")
+Pkg.add("CSV")
+Pkg.add("Plots")
+Pkg.add("PyPlot")
+
+
+using Parameters
+using Classes
+using DataFrames
+using DelimitedFiles
+using CSV
+using StaticArrays
+using Plots
+using PyPlot
+
+
+#####--------------------------------------------------------------------------------#####
+#####--------------------------------------------------------------------------------#####
 
 function F_Crust_Ocean(Planet) 
 
