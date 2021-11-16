@@ -99,7 +99,7 @@ end
 
 #                   --------------------------------------------------                   #
 
-function RunModel(years::Int64)
+function RunModel(years::Int64,filename::String)
     
     t = 0
     Monitor,Planet = initialize()
@@ -128,6 +128,7 @@ function RunModel(years::Int64)
             print("\n10% complete...",
                   "\n",t,"years\n")
         elseif t == ceil(2*TenPercent)
+
             #allow used to check model progression
             print("\n20% complete...\n",
             "\n",t,"years\n")
@@ -135,14 +136,17 @@ function RunModel(years::Int64)
             #allow used to check model progression
             print("\n30% complete...\n",
             "\n",t,"years\n")
+
         elseif t == ceil(4*TenPercent)
             #allow used to check model progression
             print("\n40% complete...\n",
             "\n",t,"years\n")
+
         elseif t == ceil(5*TenPercent)
             #allow used to check model progression
             print("\n50% complete...\n",
             "\n",t,"years\n")
+
         elseif t == ceil(6*TenPercent)
             #allow used to check model progression
             print("\n60% complete...\n",
@@ -151,28 +155,33 @@ function RunModel(years::Int64)
             #allow used to check model progression
             print("\n70% complete...\n",
             "\n",t,"years\n")
+
         elseif t == ceil(8*TenPercent)
             #allow used to check model progression
             print("\n80% complete...\n",
             "\n",t,"years\n")
+
         elseif t == ceil(9*TenPercent)
             #allow used to check model progression
             print("\n90% complete...\n",
             "\n",t,"years\n")
+
         else
-            # Visualize if the model has completed the proper number of runs
-            #= if t == TFinal
-                
-        
-                
-            
-                return print("Model Complete")
-            end =#
             if t == years
-                #visualize(years,Monitor)
-                CSV.write("\n\n/home/andrew/Desktop/Elemental-Cycling-Biomass/Outputs/Data.csv",Monitor)
+
+                visualize(Monitor)
+
+                if filename == ""
+                    filename = "Data"
+                else
+                    filename = "/home/andrew/Desktop/Elemental-Cycling-Biomass/Outputs/" * filename * ".csv"
+                end
+
+                CSV.write(filename,Monitor)
+
                 print("\n\nModel Complete\n")
                 print("\nModel data saved in /Outputs/Data.csv\n\n")
+
                 return Planet,Monitor
             end
         end
@@ -182,7 +191,7 @@ end
 #####--------------------------------------------------------------------------------#####
 #####--------------------------------------------------------------------------------#####
 
-#   Planet,Monitor = RunModel(1000)
+#   Planet,Monitor = RunModel(10,"10years")
 
 #####--------------------------------------------------------------------------------#####
 #####--------------------------------------------------------------------------------#####
@@ -199,7 +208,7 @@ if option == 1
 
     print("The inputs for the model are:",
           "\nTFinal = 0 [total years for model to run]",
-          "\nInstallPackage = true")
+          "\nfilename = output file name")
 
 else
 
@@ -208,7 +217,7 @@ else
     years = parse(Int64,years)
 
     print("\nBeginning Model...\n")
-    RunModel(years)
+    Planet,Monitor = RunModel(year,filename)
     
     print("\n\nModel complete please look at Output folder for data and plots.")
 end 
