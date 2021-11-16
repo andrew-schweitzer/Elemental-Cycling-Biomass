@@ -208,7 +208,7 @@ if option == 1
 
     print("The inputs for the model are:",
           "\nTFinal = 0 [total years for model to run]",
-          "\nInstallPackage = true")
+          "\nfilename = output file name")
 
 else
 
@@ -217,7 +217,7 @@ else
     years = parse(Int64,years)
 
     print("\nBeginning Model...\n")
-    Planet,Monitor = RunModel(years)
+    Planet,Monitor = RunModel(year,filename)
     
     print("\n\nModel complete please look at Output folder for data and plots.")
 end 

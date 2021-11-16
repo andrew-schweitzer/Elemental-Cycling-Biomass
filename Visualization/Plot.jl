@@ -37,16 +37,16 @@ end
 function VisualizeNFractionOverTime(Monitor)
 
     PyPlot.clf()
-    P1 = Plots.bar(Monitor.time,Monitor.CrustNFraction,title = "Crust",legend = false)
+    CrustNFracPlot = Plots.bar(Monitor.time,Monitor.CrustNFraction,title = "Crust",legend = false)
     gcf()
-    P2 = Plots.bar(Monitor.time,Monitor.OceanNFraction,title = "Ocean",legend = false)
+    OceanNFracPlot = Plots.bar(Monitor.time,Monitor.OceanNFraction,title = "Ocean",legend = false)
     gcf()
-    P3 = Plots.bar(Monitor.time,Monitor.AtmosphereNFraction,title = "Atmosphere",legend = false)
+    AtmosphereNFracPlot = Plots.bar(Monitor.time,Monitor.AtmosphereNFraction,title = "Atmosphere",legend = false)
     gcf()
-    P4 = Plots.bar(Monitor.time,Monitor.MantleNFraction,title = "Mantle",legend = false)
+    MantleNFracPlot = Plots.bar(Monitor.time,Monitor.MantleNFraction,title = "Mantle",legend = false)
     gcf()
     PyPlot.clf()
-    subplot = Plots.plot(P1,P2,P3,P4,
+    subplot = Plots.plot(CrustNFracPlot,OceanNFracPlot,AtmosphereNFracPlot,MantleNFracPlot,
                 layout = 4)
 
 
@@ -62,16 +62,16 @@ function VisualizeNMassOverTime(Monitor)
     # This is the Nitrogen Mass by Reservoir Time Series
     
     PyPlot.clf()
-    P1 = Plots.bar(Monitor.time,Monitor.CrustNMass,title = "Crust",legend = false)
+    CrustNMassPlot = Plots.bar(Monitor.time,Monitor.CrustNMass,title = "Crust",legend = false)
     gcf()
-    P2 = Plots.bar(Monitor.time,Monitor.OceanNMass,title = "Ocean",legend = false)
+    OceanNMassPlot = Plots.bar(Monitor.time,Monitor.OceanNMass,title = "Ocean",legend = false)
     gcf()
-    P3 = Plots.bar(Monitor.time,Monitor.AtmosphereNMass,title = "Atmosphere",legend = false)
+    AtmosphereNMassPlot = Plots.bar(Monitor.time,Monitor.AtmosphereNMass,title = "Atmosphere",legend = false)
     gcf()
-    P4 = Plots.bar(Monitor.time,Monitor.MantleNMass,title = "Mantle",legend = false)
+    MantleNMassPlot = Plots.bar(Monitor.time,Monitor.MantleNMass,title = "Mantle",legend = false)
     gcf()
     PyPlot.clf()
-    subplot = Plots.plot(P1,P2,P3,P4,
+    subplot = Plots.plot(CrustNMassPlot, OceanNMassPlot,AtmosphereNMassPlot,MantleNMassPlot,
                 layout = 4)
 
 
