@@ -20,7 +20,7 @@ using StaticArrays
 
 function F_Crust_Ocean(Planet) 
 
-    alpha = 0.000001 * rand(50:100) # kg/yr
+    alpha = 0.00001 * rand(500:1000) # kg/yr
 
     Planet.crust.NMass -= alpha
     Planet.ocean.NMass += alpha
@@ -31,7 +31,10 @@ end
 
 function F_Crust_Mantle(Planet)
     
-    epsilon = 0.01 * rand(1:99)
+    # The purpose of the rand(1000:99000) is to create more decimal points and more possible
+    # values for the random to choose from allowing for both more randomness and increased
+    # accuracy with more decimals.
+    epsilon = 0.01 * 0.001*rand(1000:50000)
     tao = 100
 
     Planet.crust.NMass -= (1-epsilon)*(Planet.crust.NMass/tao)
@@ -69,7 +72,7 @@ end
 
 function F_Mantle_Ocean(t,Planet) 
 
-    tao = log10(1e9)
+    tao = log(1e9)
 
     Planet.mantle.NMass -= -8*log10(1 + 2*exp(-t/tao))
     Planet.ocean.NMass += -8*log10(1 + 2*exp(-t/tao))
@@ -92,8 +95,8 @@ end
 
 #                   --------------------------------------------------                   #
 
+#= 
 
-#check agtmosphere and ocean Nitrogen levels such that they never go below zero
 function F_Henry_old(Planet) 
 
     AtomicMassN2 = 0.032 # kg/mol
@@ -122,7 +125,7 @@ function F_Henry_old(Planet)
     end
 
 end
-
+  =#
 #                   --------------------------------------------------                   #
 
 function F_Henry(Planet) 
