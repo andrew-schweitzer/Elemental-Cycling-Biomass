@@ -2,31 +2,18 @@
 #####--------------------------------------------------------------------------------#####
 
 
-using Pkg
-Pkg.add("Classes")
-Pkg.add("Parameters")
-Pkg.add("DataFrames")
-Pkg.add("StaticArrays")
-Pkg.add("CSV")
-Pkg.add("Plots")
-Pkg.add("PyPlot")
-
-
 using Parameters
 using Classes
 using DataFrames
-using DelimitedFiles
-using CSV
 using StaticArrays
-using Plots
-using PyPlot
+
 
 
 #####--------------------------------------------------------------------------------#####
 #####--------------------------------------------------------------------------------#####
 
 @with_kw mutable struct Ocean
-    volume::Float64 = 0.0 #only significant for ocean
+    volume::Float64 = 0.0 # volume of ocean in Liters
     Nfraction::Float64 = 0.0 #fraction of total mass in resevoir
     NMass::Float64 = 0.0 #mass
 end
@@ -42,9 +29,9 @@ end
 end
 
 @with_kw mutable struct Atmosphere
+    volume::Float64 = 0.0 # volume of atmosphere in Liters
     Nfraction::Float64 = 0.0 #fraction of Planetary Nitrogen mass in atmosphere
     NMass::Float64 = 0.0 # mass of Nitrogen in atmosphere
-    Mass::Float64 = 0.0 # mass of atmosphere
 end
 
 @with_kw mutable struct PlanetaryBody
