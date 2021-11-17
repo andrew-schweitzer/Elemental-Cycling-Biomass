@@ -2,21 +2,9 @@
 #####--------------------------------------------------------------------------------#####
 
 
-using Pkg
-Pkg.add("Classes")
-Pkg.add("Parameters")
-Pkg.add("DataFrames")
-Pkg.add("StaticArrays")
-Pkg.add("CSV")
-Pkg.add("Plots")
-Pkg.add("PyPlot")
-
-
-using Parameters
 using Classes
+using Parameters
 using DataFrames
-using DelimitedFiles
-using CSV
 using StaticArrays
 using Plots
 using PyPlot

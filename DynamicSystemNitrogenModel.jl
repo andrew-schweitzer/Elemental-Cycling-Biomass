@@ -1,17 +1,17 @@
 #####--------------------------------------------------------------------------------#####
 #####--------------------------------------------------------------------------------#####
 
-
+print("Please wait for packages needed for model to be installed...\n")
 using Pkg
-Pkg.add("Classes")
+#= Pkg.add("Classes")
 Pkg.add("Parameters")
 Pkg.add("DataFrames")
 Pkg.add("StaticArrays")
 Pkg.add("CSV")
 Pkg.add("Plots")
-Pkg.add("PyPlot")
+Pkg.add("PyPlot") =#
 
-
+print("Please wait for packages needed for model to be called...\n")
 using Parameters
 using Classes
 using DataFrames
@@ -21,11 +21,10 @@ using StaticArrays
 using Plots
 using PyPlot
 
-
+print("Please wait for files needed for model to be called...\n")
 include("src/classes.jl")
 include("src/Processes.jl")
 include("Visualization/Plot.jl")
-
 
 
 #####--------------------------------------------------------------------------------#####
@@ -53,15 +52,15 @@ function initialize()
                            ocean = Ocean(volume = log10(1.3e18),NMass = log10(2.4e16)),
                            crust = Crust(NMass = log10(1.9e18)),
                            mantle = Mantle(NMass = log10(4e18)),
-                           atmosphere = Atmosphere(Mass = log10(4e18),NMass = log10(2.8e19)))
+                           atmosphere = Atmosphere(volume = log10(3.64e20),NMass = log10(2.8e19)))
 
     Planet.NMass = log10(10^Planet.ocean.NMass + 10^Planet.crust.NMass + 
                          10^Planet.mantle.NMass + 10^Planet.atmosphere.NMass)
 
-    Planet.ocean.Nfraction = 10^Planet.ocean.NMass / 10^Planet.NMass
-    Planet.crust.Nfraction = 10^Planet.crust.NMass / 10^Planet.NMass
-    Planet.mantle.Nfraction = 10^Planet.mantle.NMass / 10^Planet.NMass
-    Planet.atmosphere.Nfraction = 10^Planet.atmosphere.NMass / 10^Planet.NMass
+    Planet.ocean.Nfraction = 10^(Planet.ocean.NMass - Planet.NMass)
+    Planet.crust.Nfraction = 10^(Planet.crust.NMass - Planet.NMass)
+    Planet.mantle.Nfraction = 10^(Planet.mantle.NMass - Planet.NMass)
+    Planet.atmosphere.Nfraction = 10^(Planet.atmosphere.NMass - Planet.NMass)
 
     return Monitor,Planet
 end
@@ -90,101 +89,61 @@ end
 #                   --------------------------------------------------                   #
 
 function store(t,Planet,Monitor)
-    push!(Monitor,[t, Planet.ocean.volume, Planet.NMass, Planet.ocean.Nfraction,
-                   Planet.ocean.NMass, Planet.crust.Nfraction, Planet.crust.NMass,
-                   Planet.atmosphere.Nfraction, Planet.atmosphere.NMass,
-                   Planet.mantle.Nfraction, Planet.mantle.NMass])
+    push!(Monitor,[t, 
+                   Planet.ocean.volume, 
+                   Planet.ocean.Nfraction,
+                   Planet.ocean.NMass, 
+                   Planet.crust.Nfraction, 
+                   Planet.crust.NMass,
+                   Planet.atmosphere.Nfraction, 
+                   Planet.atmosphere.NMass,
+                   Planet.mantle.Nfraction, 
+                   Planet.mantle.NMass,
+                   Planet.NMass]) 
     return Monitor
 end
 
 #                   --------------------------------------------------                   #
 
-function RunModel(years::Int64,filename::String)
+function RunModel(years::Int64,filename::String = "")
     
     t = 0
     Monitor,Planet = initialize()
     Monitor = store(t,Planet,Monitor)
 
-    print("Inialization complete\n")
+    print("\nInialization complete\n")
     t += 1 # initial values stored in timestep 0 so first that t represents
            # completed years
     
 
     
-    while t < years
+    while t < years+1
         
         Planet = evolve(t,Planet)
         Monitor = store(t,Planet,Monitor)
 
         t += 1
-        
 
-        TenPercent = ceil(years/10)
+        if t == years
 
+            print("\n\nModel Complete\n")
+            print("Model runs complete now visualizing and exporting data...")
+            visualize(Monitor)
 
-
-        if t == TenPercent
-            #allow used to check model progression
-            print("\n10% complete...",
-                  "\n",t,"years\n")
-        elseif t == ceil(2*TenPercent)
-
-            #allow used to check model progression
-            print("\n20% complete...\n",
-            "\n",t,"years\n")
-        elseif t == ceil(3*TenPercent)
-            #allow used to check model progression
-            print("\n30% complete...\n",
-            "\n",t,"years\n")
-
-        elseif t == ceil(4*TenPercent)
-            #allow used to check model progression
-            print("\n40% complete...\n",
-            "\n",t,"years\n")
-
-        elseif t == ceil(5*TenPercent)
-            #allow used to check model progression
-            print("\n50% complete...\n",
-            "\n",t,"years\n")
-
-        elseif t == ceil(6*TenPercent)
-            #allow used to check model progression
-            print("\n60% complete...\n",
-            "\n",t,"years\n")
-        elseif t == ceil(7*TenPercent)
-            #allow used to check model progression
-            print("\n70% complete...\n",
-            "\n",t,"years\n")
-
-        elseif t == ceil(8*TenPercent)
-            #allow used to check model progression
-            print("\n80% complete...\n",
-            "\n",t,"years\n")
-
-        elseif t == ceil(9*TenPercent)
-            #allow used to check model progression
-            print("\n90% complete...\n",
-            "\n",t,"years\n")
-
-        else
-            if t == years
-
-                visualize(Monitor)
-
-                if filename == ""
-                    filename = "Data"
-                else
-                    filename = "/home/andrew/Desktop/Elemental-Cycling-Biomass/Outputs/" * filename * ".csv"
-                end
-
-                CSV.write(filename,Monitor)
-
-                print("\n\nModel Complete\n")
-                print("\nModel data saved in /Outputs/Data.csv\n\n")
-
-                return Planet,Monitor
+            if filename == ""
+                filename = "Data"
+            else
+                filename = "/home/andrew/Desktop/Elemental-Cycling-Biomass/Outputs/" * filename * ".csv"
             end
+
+            CSV.write("/home/andrew/Desktop/Elemental-Cycling-Biomass/Outputs/Data.csv",Monitor)
+
+            
+            print("\nModel data saved in /Outputs/Data.csv\n\n")
+
+            return Planet,Monitor
         end
+
     end
 end
 
@@ -208,7 +167,7 @@ if option == 1
 
     print("The inputs for the model are:",
           "\nTFinal = 0 [total years for model to run]",
-          "\nfilename = output file name")
+          "\nfilename = output file name\n")
 
 else
 
@@ -216,10 +175,14 @@ else
     years = readline()
     years = parse(Int64,years)
 
+    print("\nPlease indicate the filename [if none leave empty]:")
+    filename = readline()
+
     print("\nBeginning Model...\n")
-    Planet,Monitor = RunModel(year,filename)
+    Planet,Monitor = RunModel(years,filename)
     
-    print("\n\nModel complete please look at Output folder for data and plots.")
+    print("\n\nModel complete please look at Output folder for data and plots.\n")
 end 
 
-#                   --------------------------------------------------                   #
+#####--------------------------------------------------------------------------------#####
+#####--------------------------------------------------------------------------------#####
