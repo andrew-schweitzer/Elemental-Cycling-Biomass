@@ -183,44 +183,49 @@ function F_Henry(Planet)
        additionally this function assumes that all nitrogen moves immedietly which is not 
        the most realistic but recursion would be a strong tool in making this function more 
         robust.
+        Planet.atmosphere.NMass
+        Planet.atmosphere.volume
+
+        Planet.ocean.NMass
+        Planet.ocean.volume
                                                                                         =#
 
-    AtmosphericConc = AtomicMassN2*Planet.atmosphere.NMass - Planet.atmosphere.volume
-    OceanicConc = AtomicMassN2*Planet.ocean.NMass - Planet.ocean.volume
+    AtmosphericConc = (Planet.atmosphere.NMass - Planet.atmosphere.volume) - log10(0.032)
+    OceanicConc = (Planet.ocean.NMass - Planet.ocean.volume) - log10(0.032)
 
     if (0.015) * AtmosphericConc > OceanicConc
 
         # here is can be seen that the oceanic concentration is low thus dissolves 
         # atmospheric nitrogen
-        ConcDelta = (0.015) * AtmosphericConc - OceanicConc
+        ConcDelta = log(0.015) * AtmosphericConc - OceanicConc
 
         # Check if the concentration difference is larger than the reservoir being taken
         # from. Change value to half of the current resevoir value if this is true.
-        if ConcDelta > AtmosphericConc
+        while ConcDelta > AtmosphericConc
 
-            ConcDelta = 0.5*AtmosphericConc
+            ConcDelta = 0.5*ConcDelta
 
         end
         
-        Planet.atmosphere.NMass -= (ConcDelta*Planet.atmosphere.volume)/AtomicMassN2
-        Planet.ocean.NMass += (ConcDelta*Planet.atmosphere.volume)AtomicMassN2
+        Planet.atmosphere.NMass -= ConcDelta*Planet.atmosphere.volume*AtomicMassN2
+        Planet.ocean.NMass += ConcDelta*Planet.atmosphere.volume*AtomicMassN2
 
     elseif (0.015) * AtmosphericConc < OceanicConc
 
         # here is can be seen that the atmospheric concentration is low thus forces 
         # nitrogen to begin releasing 
-        ConcDelta = OceanicConc - (0.015) * AtmosphericConc
+        ConcDelta = OceanicConc - 0.015*AtmosphericConc
 
         # Check if the concentration difference is larger than the reservoir being taken
         # from. Change value to half of the current resevoir value if this is true.
-        if ConcDelta > OceanicConc
+        while ConcDelta > OceanicConc
 
-            ConcDelta = 0.5*OceanicConc
+            ConcDelta = 0.5*ConcDelta
             
         end
 
-        Planet.atmosphere.NMass += (ConcDelta*Planet.ocean.volume)/AtomicMassN2
-        Planet.ocean.NMass -= (ConcDelta*Planet.ocean.volume)/AtomicMassN2
+        Planet.atmosphere.NMass += (ConcDelta*Planet.ocean.volume)*AtomicMassN2
+        Planet.ocean.NMass -= (ConcDelta*Planet.ocean.volume)*AtomicMassN2
 
     else
         #No change if cmax = ccurr
@@ -228,40 +233,40 @@ function F_Henry(Planet)
     return Planet
 end
 
-#                   --------------------------------------------------                   #
+#                   ----------------------------------------------------                   #
 
 function F_Henry_looped(Planet) 
 
     #=  Equation:
     
-                Henry's Law but in reference to Hc which is dimensionless due to it being a 
-                Ratio between the concentration of atmospheric Nitrogen to dissolved Nitrogen
-    
-                Hc * ConcentrationAtmosphere = ConcentrationOcean
-    
-                Hc for N2 is 1.5e-2
-    
-                (0.015) * ConcentrationAtmosphere = ConcentrationOcean
-    
-                if [(0.015) * ConcentrationAtmosphere > ConcentrationOcean]
-                    movement of Nitrogen from the atmosphere to the ocean
-                
-                if [(0.015) * ConcentrationAtmosphere < ConcentrationOcean]
-                    movement of Nitrogen from the ocean to the atmosphere
+            Henry's Law but in reference to Hc which is dimensionless due to it being a 
+            Ratio between the concentration of atmospheric Nitrogen to dissolved Nitrogen
+
+            Hc * ConcentrationAtmosphere = ConcentrationOcean
+
+            Hc for N2 is 1.5e-2
+
+            (0.015) * ConcentrationAtmosphere = ConcentrationOcean
+
+            if [(0.015) * ConcentrationAtmosphere > ConcentrationOcean]
+                movement of Nitrogen from the atmosphere to the ocean
+            
+            if [(0.015) * ConcentrationAtmosphere < ConcentrationOcean]
+                movement of Nitrogen from the ocean to the atmosphere
                                                                                             =#
     
     AtomicMassN2 = 0.032 # kg/mol
     
-    #= since these values are stored as logarithms they are subtracted rather than divided
+    #= 
+        since these values are stored as logarithms they are subtracted rather than divided
         additionally this function assumes that all nitrogen moves immedietly which is not 
         the most realistic but recursion would be a strong tool in making this function more 
         robust.
-                                                                                        =#
+                                                                                            =#
 
-    AtmosphericConc = Planet.atmosphere.NMass/AtomicMassN2 - Planet.atmosphere.volume
-    OceanicConc = Planet.ocean.NMass/AtomicMassN2 - Planet.ocean.volume
+    AtmosphericConc = (Planet.atmosphere.NMass - Planet.atmosphere.volume)/AtomicMassN2
+    OceanicConc = (Planet.ocean.NMass - Planet.ocean.volume)/AtomicMassN2
 
-    
 
     while 0.015*AtmosphericConc != OceanicConc
         
@@ -269,7 +274,7 @@ function F_Henry_looped(Planet)
 
             # here is can be seen that the oceanic concentration is low thus dissolves 
             # atmospheric nitrogen
-            ConcDelta = 0.1*(0.015*AtmosphericConc - OceanicConc)
+            ConcDelta = (0.015*AtmosphericConc - OceanicConc)/10
 
             Planet.atmosphere.NMass -= (ConcDelta*Planet.atmosphere.volume)*AtomicMassN2
             Planet.ocean.NMass += (ConcDelta*Planet.atmosphere.volume)*AtomicMassN2
@@ -278,7 +283,7 @@ function F_Henry_looped(Planet)
     
             # here is can be seen that the atmospheric concentration is low thus forces 
             # nitrogen to begin releasing 
-            ConcDelta = 0.1*(OceanicConc - 0.015*AtmosphericConc)
+            ConcDelta = (OceanicConc - 0.015*AtmosphericConc)/10
             
             Planet.atmosphere.NMass += (ConcDelta*Planet.ocean.volume)*AtomicMassN2
             Planet.ocean.NMass -= (ConcDelta*Planet.ocean.volume)*AtomicMassN2

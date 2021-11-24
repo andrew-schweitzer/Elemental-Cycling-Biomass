@@ -26,7 +26,6 @@ include("src/classes.jl")
 include("src/Processes.jl")
 include("Visualization/Plot.jl")
 
-
 #####--------------------------------------------------------------------------------#####
 #####--------------------------------------------------------------------------------#####
 
@@ -68,13 +67,13 @@ end
 
 function evolve(t,Planet)
 
-    F_Crust_Ocean(Planet)
-    F_Crust_Mantle(Planet)
-    F_Ocean_Crust(Planet)
-    F_Mantle_Atmosphere(Planet)
-    F_Mantle_Ocean(t,Planet)
-    F_Henry_looped(Planet)
-    F_Meteor(t,Planet)
+    Planet = F_Crust_Ocean(Planet)
+    Planet = F_Crust_Mantle(Planet)
+    Planet = F_Ocean_Crust(Planet)
+    Planet = F_Mantle_Atmosphere(Planet)
+    Planet = F_Mantle_Ocean(t,Planet)
+    Planet = F_Henry(Planet)
+    Planet = F_Meteor(t,Planet)
 
     Planet.ocean.Nfraction = (Planet.ocean.NMass - Planet.NMass)
     Planet.crust.Nfraction = (Planet.crust.NMass - Planet.NMass)
@@ -149,7 +148,7 @@ end
 #####--------------------------------------------------------------------------------#####
 #####--------------------------------------------------------------------------------#####
 
-#   Planet,Monitor = RunModel(10)
+#   Planet,Monitor = RunModel(1000)
 
 #####--------------------------------------------------------------------------------#####
 #####--------------------------------------------------------------------------------#####
