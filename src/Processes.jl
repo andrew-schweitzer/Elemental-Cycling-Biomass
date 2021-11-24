@@ -22,9 +22,14 @@ function F_Crust_Ocean(Planet)
 
     alpha = 0.00001 * rand(500:1000) # kg/yr
 
+    while alpha > Planet.crust.NMass
+        alpha = alpha/2
+    end
+
     Planet.crust.NMass -= alpha
     Planet.ocean.NMass += alpha
 
+    return Planet
 end
 
 #                   --------------------------------------------------                   #
@@ -34,12 +39,19 @@ function F_Crust_Mantle(Planet)
     # The purpose of the rand(1000:99000) is to create more decimal points and more possible
     # values for the random to choose from allowing for both more randomness and increased
     # accuracy with more decimals.
-    epsilon = 0.01 * 0.001*rand(1000:50000)
+    epsilon = 0.00001*rand(1000:50000)
     tao = 100
 
-    Planet.crust.NMass -= (1-epsilon)*(Planet.crust.NMass/tao)
-    Planet.mantle.NMass += (1-epsilon)*(Planet.mantle.NMass/tao)
+    delta = (1-epsilon)*(Planet.crust.NMass/tao)
 
+    while delta > Planet.crust.NMass
+        delta = delta/2
+    end
+
+    Planet.crust.NMass -= delta
+    Planet.mantle.NMass += delta
+
+    return Planet
 end
 
 #                   --------------------------------------------------                   #
@@ -50,22 +62,32 @@ function F_Ocean_Crust(Planet)
     Rho = 1700
     Kf = 0.001
 
-    F = 0.001*(VSed - (Planet.ocean.volume*Rho*Kf))
+    F = 0.01*(VSed - (Planet.ocean.volume*Rho*Kf))
+
+    while F > Planet.crust.NMass
+        F = F/2
+    end
 
     Planet.crust.NMass -= F
     Planet.ocean.NMass += F
 
+    return Planet
 end
 
 #                   --------------------------------------------------                   #
 
 function F_Mantle_Atmosphere(Planet) 
 
-    delta = log10(1e6 * rand(2800:3000))
+    delta = 6*log10(rand(2800:3000))
 
-    Planet.crust.NMass -= delta
-    Planet.ocean.NMass += delta
+    while delta > Planet.mantle.NMass
+        delta = delta/2
+    end
 
+    Planet.mantle.NMass -= delta
+    Planet.atmosphere.NMass += delta
+
+    return Planet
 end
 
 #                   --------------------------------------------------                   #
@@ -74,8 +96,14 @@ function F_Mantle_Ocean(t,Planet)
 
     tao = log(1e9)
 
-    Planet.mantle.NMass -= -8*log10(1 + 2*exp(-t/tao))
-    Planet.ocean.NMass += -8*log10(1 + 2*exp(-t/tao))
+    delta = -8*log10(1 + 2*exp(-t/tao))
+
+    while delta > Planet.mantle.NMass
+        delta = delta/2
+    end
+
+    Planet.mantle.NMass -= delta
+    Planet.ocean.NMass += delta
 
 end
 
@@ -91,6 +119,7 @@ function F_Meteor(t,Planet)
     Planet.atmosphere.NMass += 5*log10( 2.4*( 1 + 1000*exp(-t/tao) ) )
     Planet.Mass += 5*log10( 2.4*( 1 + 1000*exp(-t/tao) ) )
 
+    return Planet
 end
 
 #                   --------------------------------------------------                   #
@@ -130,7 +159,7 @@ end
 
 function F_Henry(Planet) 
 
-#=  Equation:
+    #=  Equation:
 
             Henry's Law but in reference to Hc which is dimensionless due to it being a 
             Ratio between the concentration of atmospheric Nitrogen to dissolved Nitrogen
@@ -148,7 +177,7 @@ function F_Henry(Planet)
                 movement of Nitrogen from the ocean to the atmosphere
                                                                                         =#
 
-AtomicMassN2 = 0.032 # kg/mol
+    AtomicMassN2 = 0.032 # kg/mol
     
     #= since these values are stored as logarithms they are subtracted rather than divided
        additionally this function assumes that all nitrogen moves immedietly which is not 
@@ -196,9 +225,69 @@ AtomicMassN2 = 0.032 # kg/mol
     else
         #No change if cmax = ccurr
     end
-
-
-
+    return Planet
 end
 
 #                   --------------------------------------------------                   #
+
+function F_Henry_looped(Planet) 
+
+    #=  Equation:
+    
+                Henry's Law but in reference to Hc which is dimensionless due to it being a 
+                Ratio between the concentration of atmospheric Nitrogen to dissolved Nitrogen
+    
+                Hc * ConcentrationAtmosphere = ConcentrationOcean
+    
+                Hc for N2 is 1.5e-2
+    
+                (0.015) * ConcentrationAtmosphere = ConcentrationOcean
+    
+                if [(0.015) * ConcentrationAtmosphere > ConcentrationOcean]
+                    movement of Nitrogen from the atmosphere to the ocean
+                
+                if [(0.015) * ConcentrationAtmosphere < ConcentrationOcean]
+                    movement of Nitrogen from the ocean to the atmosphere
+                                                                                            =#
+    
+    AtomicMassN2 = 0.032 # kg/mol
+    
+    #= since these values are stored as logarithms they are subtracted rather than divided
+        additionally this function assumes that all nitrogen moves immedietly which is not 
+        the most realistic but recursion would be a strong tool in making this function more 
+        robust.
+                                                                                        =#
+
+    AtmosphericConc = Planet.atmosphere.NMass/AtomicMassN2 - Planet.atmosphere.volume
+    OceanicConc = Planet.ocean.NMass/AtomicMassN2 - Planet.ocean.volume
+
+    
+
+    while 0.015*AtmosphericConc != OceanicConc
+        
+        if 0.015*AtmosphericConc > OceanicConc
+
+            # here is can be seen that the oceanic concentration is low thus dissolves 
+            # atmospheric nitrogen
+            ConcDelta = 0.1*(0.015*AtmosphericConc - OceanicConc)
+
+            Planet.atmosphere.NMass -= (ConcDelta*Planet.atmosphere.volume)*AtomicMassN2
+            Planet.ocean.NMass += (ConcDelta*Planet.atmosphere.volume)*AtomicMassN2
+                
+        elseif 0.015*AtmosphericConc < OceanicConc
+    
+            # here is can be seen that the atmospheric concentration is low thus forces 
+            # nitrogen to begin releasing 
+            ConcDelta = 0.1*(OceanicConc - 0.015*AtmosphericConc)
+            
+            Planet.atmosphere.NMass += (ConcDelta*Planet.ocean.volume)*AtomicMassN2
+            Planet.ocean.NMass -= (ConcDelta*Planet.ocean.volume)*AtomicMassN2
+
+        end
+
+        AtmosphericConc = AtomicMassN2*Planet.atmosphere.NMass - Planet.atmosphere.volume
+        OceanicConc = AtomicMassN2*Planet.ocean.NMass - Planet.ocean.volume
+
+    end
+    return Planet
+end

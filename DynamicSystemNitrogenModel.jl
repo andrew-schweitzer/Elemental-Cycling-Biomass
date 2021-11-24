@@ -1,9 +1,9 @@
 #####--------------------------------------------------------------------------------#####
 #####--------------------------------------------------------------------------------#####
 
-print("Please wait for packages needed for model to be installed...\n")
+#= print("Please wait for packages needed for model to be installed...\n")
 using Pkg
-#= Pkg.add("Classes")
+Pkg.add("Classes")
 Pkg.add("Parameters")
 Pkg.add("DataFrames")
 Pkg.add("StaticArrays")
@@ -54,13 +54,12 @@ function initialize()
                            mantle = Mantle(NMass = log10(4e18)),
                            atmosphere = Atmosphere(volume = log10(3.64e20),NMass = log10(2.8e19)))
 
-    Planet.NMass = log10(10^Planet.ocean.NMass + 10^Planet.crust.NMass + 
-                         10^Planet.mantle.NMass + 10^Planet.atmosphere.NMass)
+    Planet.NMass = Planet.ocean.NMass + Planet.crust.NMass + Planet.mantle.NMass + Planet.atmosphere.NMass
 
-    Planet.ocean.Nfraction = 10^(Planet.ocean.NMass - Planet.NMass)
-    Planet.crust.Nfraction = 10^(Planet.crust.NMass - Planet.NMass)
-    Planet.mantle.Nfraction = 10^(Planet.mantle.NMass - Planet.NMass)
-    Planet.atmosphere.Nfraction = 10^(Planet.atmosphere.NMass - Planet.NMass)
+    Planet.ocean.Nfraction = (Planet.ocean.NMass - Planet.NMass)
+    Planet.crust.Nfraction = (Planet.crust.NMass - Planet.NMass)
+    Planet.mantle.Nfraction = (Planet.mantle.NMass - Planet.NMass)
+    Planet.atmosphere.Nfraction = (Planet.atmosphere.NMass - Planet.NMass)
 
     return Monitor,Planet
 end
@@ -74,13 +73,13 @@ function evolve(t,Planet)
     F_Ocean_Crust(Planet)
     F_Mantle_Atmosphere(Planet)
     F_Mantle_Ocean(t,Planet)
-    F_Henry(Planet)
+    F_Henry_looped(Planet)
     F_Meteor(t,Planet)
 
-    Planet.ocean.Nfraction = 10^(Planet.ocean.NMass - Planet.NMass)
-    Planet.crust.Nfraction = 10^(Planet.crust.NMass - Planet.NMass)
-    Planet.mantle.Nfraction = 10^(Planet.mantle.NMass - Planet.NMass)
-    Planet.atmosphere.Nfraction = 10^(Planet.atmosphere.NMass - Planet.NMass)
+    Planet.ocean.Nfraction = (Planet.ocean.NMass - Planet.NMass)
+    Planet.crust.Nfraction = (Planet.crust.NMass - Planet.NMass)
+    Planet.mantle.Nfraction = (Planet.mantle.NMass - Planet.NMass)
+    Planet.atmosphere.Nfraction = (Planet.atmosphere.NMass - Planet.NMass)
 
     return Planet
 
@@ -127,7 +126,7 @@ function RunModel(years::Int64,filename::String = "")
         if t == years
 
             print("\n\nModel Complete\n")
-            print("Model runs complete now visualizing and exporting data...")
+            print("Model runs complete now visualizing and exporting data...\n\n")
             visualize(Monitor)
 
             if filename == ""
@@ -150,12 +149,12 @@ end
 #####--------------------------------------------------------------------------------#####
 #####--------------------------------------------------------------------------------#####
 
-#   Planet,Monitor = RunModel(10,"10years")
+#   Planet,Monitor = RunModel(10)
 
 #####--------------------------------------------------------------------------------#####
 #####--------------------------------------------------------------------------------#####
 
-print("Welcome to the Elemental Cycling Model!",
+print("\n\nWelcome to the Elemental Cycling Model!",
       "\nPlease Indicate from the below list what to do next:",
       "\n1 : Need inputs",
       "\n2 : Input variables\n\n")
@@ -165,7 +164,7 @@ option = parse(Int64,option)
 
 if option == 1
 
-    print("The inputs for the model are:",
+    print("\nThe inputs for the model are:",
           "\nTFinal = 0 [total years for model to run]",
           "\nfilename = output file name\n")
 

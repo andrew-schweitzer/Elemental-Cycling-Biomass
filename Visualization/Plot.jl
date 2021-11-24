@@ -25,23 +25,22 @@ end
 function VisualizeNFractionOverTime(Monitor)
 
     PyPlot.clf()
-    CrustNFracPlot = Plots.bar(Monitor.time,Monitor.CrustNFraction,title = "Crust",legend = false)
-    gcf()
-    OceanNFracPlot = Plots.bar(Monitor.time,Monitor.OceanNFraction,title = "Ocean",legend = false)
-    gcf()
-    AtmosphereNFracPlot = Plots.bar(Monitor.time,Monitor.AtmosphereNFraction,title = "Atmosphere",legend = false)
-    gcf()
-    MantleNFracPlot = Plots.bar(Monitor.time,Monitor.MantleNFraction,title = "Mantle",legend = false)
-    gcf()
-    PyPlot.clf()
-    subplot = Plots.plot(CrustNFracPlot,OceanNFracPlot,AtmosphereNFracPlot,MantleNFracPlot,
-                layout = 4)
+    NFracPlot = Plots.plot(Monitor.time,Monitor.CrustNFraction,title = "Crust",legend = false,color = "green")
+
+    Plots.plot!(Monitor.time,Monitor.OceanNFraction,title = "Ocean",legend = false,color = "blue")
+    Plots.plot!(Monitor.time,Monitor.AtmosphereNFraction,title = "Atmosphere",legend = false,color = "black")
+    Plots.plot!(Monitor.time,Monitor.MantleNFraction,title = "Mantle",legend = false,color = "orange")
+
+    #= subplot = Plots.plot(CrustNFracPlot,OceanNFracPlot,AtmosphereNFracPlot,MantleNFracPlot,
+                layout = (4,1)) =#
 
 
-    png(subplot,"/home/andrew/Desktop/Elemental-Cycling-Biomass/Outputs/NitrogenFractionOverTime.png")          
+    png(NFracPlot,"/home/andrew/Desktop/Elemental-Cycling-Biomass/Outputs/NitrogenFractionOverTime.png")          
 
 end
 
+
+# VisualizeNFractionOverTime(Monitor)
 #                   --------------------------------------------------                    #
 
 function VisualizeNMassOverTime(Monitor)
@@ -50,17 +49,17 @@ function VisualizeNMassOverTime(Monitor)
     # This is the Nitrogen Mass by Reservoir Time Series
     
     PyPlot.clf()
-    CrustNMassPlot = Plots.bar(Monitor.time,Monitor.CrustNMass,title = "Crust",legend = false)
+    CrustNMassPlot = Plots.plot(Monitor.time,Monitor.CrustNMass,title = "Crust",legend = false,color = "black")
     gcf()
-    OceanNMassPlot = Plots.bar(Monitor.time,Monitor.OceanNMass,title = "Ocean",legend = false)
+    OceanNMassPlot = Plots.plot(Monitor.time,Monitor.OceanNMass,title = "Ocean",legend = false,color = "black")
     gcf()
-    AtmosphereNMassPlot = Plots.bar(Monitor.time,Monitor.AtmosphereNMass,title = "Atmosphere",legend = false)
+    AtmosphereNMassPlot = Plots.plot(Monitor.time,Monitor.AtmosphereNMass,title = "Atmosphere",legend = false,color = "black")
     gcf()
-    MantleNMassPlot = Plots.bar(Monitor.time,Monitor.MantleNMass,title = "Mantle",legend = false)
+    MantleNMassPlot = Plots.plot(Monitor.time,y = Monitor.MantleNMass,title = "Mantle",legend = false,color = "black")
     gcf()
     PyPlot.clf()
-    subplot = Plots.plot(CrustNMassPlot, OceanNMassPlot,AtmosphereNMassPlot,MantleNMassPlot,
-                layout = 4)
+    Plots.plot(CrustNMassPlot, OceanNMassPlot,AtmosphereNMassPlot,MantleNMassPlot,
+                layout = (4,1))
 
 
     png(subplot,"/home/andrew/Desktop/Elemental-Cycling-Biomass/Outputs/NitrogenMassOverTime.png")          
