@@ -47,18 +47,18 @@ function initialize()
 
     # Due to dimensional consraints within julia to perform calculations the log base 10 was taken.
 
-    Planet = PlanetaryBody(Mass = log10(6e24),
+    Planet = PlanetaryBody(Mass = log10(6e24), NMass = 3.3924e19,
                            ocean = Ocean(volume = log10(1.3e18),NMass = log10(2.4e16)),
                            crust = Crust(NMass = log10(1.9e18)),
                            mantle = Mantle(NMass = log10(4e18)),
                            atmosphere = Atmosphere(volume = log10(3.64e20),NMass = log10(2.8e19)))
 
-    Planet.NMass = Planet.ocean.NMass + Planet.crust.NMass + Planet.mantle.NMass + Planet.atmosphere.NMass
-
-    Planet.ocean.Nfraction = (Planet.ocean.NMass - Planet.NMass)
-    Planet.crust.Nfraction = (Planet.crust.NMass - Planet.NMass)
-    Planet.mantle.Nfraction = (Planet.mantle.NMass - Planet.NMass)
-    Planet.atmosphere.Nfraction = (Planet.atmosphere.NMass - Planet.NMass)
+    
+    
+    Planet.ocean.Nfraction = 10^Planet.ocean.NMass / Planet.NMass
+    Planet.crust.Nfraction = 10^Planet.crust.NMass / Planet.NMass
+    Planet.mantle.Nfraction = 10^Planet.mantle.NMass / Planet.NMass
+    Planet.atmosphere.Nfraction = 10^Planet.atmosphere.NMass / Planet.NMass
 
     return Monitor,Planet
 end
@@ -67,18 +67,18 @@ end
 
 function evolve(t,Planet)
 
-    Planet = F_Crust_Ocean(Planet)
-    Planet = F_Crust_Mantle(Planet)
-    Planet = F_Ocean_Crust(Planet)
-    Planet = F_Mantle_Atmosphere(Planet)
-    Planet = F_Mantle_Ocean(t,Planet)
-    Planet = F_Henry(Planet)
-    Planet = F_Meteor(t,Planet)
+    F_Crust_Ocean(Planet)
+    F_Crust_Mantle(Planet)
+    F_Ocean_Crust(Planet)
+    F_Mantle_Atmosphere(Planet)
+    F_Mantle_Ocean(t,Planet)
+    F_Henry(Planet)
+    F_Meteor(t,Planet)
 
-    Planet.ocean.Nfraction = (Planet.ocean.NMass - Planet.NMass)
-    Planet.crust.Nfraction = (Planet.crust.NMass - Planet.NMass)
-    Planet.mantle.Nfraction = (Planet.mantle.NMass - Planet.NMass)
-    Planet.atmosphere.Nfraction = (Planet.atmosphere.NMass - Planet.NMass)
+    Planet.ocean.Nfraction = 10^Planet.ocean.NMass / Planet.NMass
+    Planet.crust.Nfraction = 10^Planet.crust.NMass / Planet.NMass
+    Planet.mantle.Nfraction = 10^Planet.mantle.NMass / Planet.NMass
+    Planet.atmosphere.Nfraction = 10^Planet.atmosphere.NMass / Planet.NMass
 
     return Planet
 
@@ -148,7 +148,7 @@ end
 #####--------------------------------------------------------------------------------#####
 #####--------------------------------------------------------------------------------#####
 
-#   Planet,Monitor = RunModel(1000)
+#   Planet,Monitor = RunModel(10,"Data")
 
 #####--------------------------------------------------------------------------------#####
 #####--------------------------------------------------------------------------------#####

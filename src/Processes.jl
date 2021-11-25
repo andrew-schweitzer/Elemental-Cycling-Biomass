@@ -29,7 +29,6 @@ function F_Crust_Ocean(Planet)
     Planet.crust.NMass -= alpha
     Planet.ocean.NMass += alpha
 
-    return Planet
 end
 
 #                   --------------------------------------------------                   #
@@ -51,7 +50,6 @@ function F_Crust_Mantle(Planet)
     Planet.crust.NMass -= delta
     Planet.mantle.NMass += delta
 
-    return Planet
 end
 
 #                   --------------------------------------------------                   #
@@ -71,14 +69,13 @@ function F_Ocean_Crust(Planet)
     Planet.crust.NMass -= F
     Planet.ocean.NMass += F
 
-    return Planet
 end
 
 #                   --------------------------------------------------                   #
 
 function F_Mantle_Atmosphere(Planet) 
 
-    delta = 6*log10(rand(2800:3000))
+    delta = log10(6) + log10(rand(2800:3000))
 
     while delta > Planet.mantle.NMass
         delta = delta/2
@@ -87,7 +84,6 @@ function F_Mantle_Atmosphere(Planet)
     Planet.mantle.NMass -= delta
     Planet.atmosphere.NMass += delta
 
-    return Planet
 end
 
 #                   --------------------------------------------------                   #
@@ -113,13 +109,11 @@ function F_Meteor(t,Planet)
 
     N0 = 2.4e5
     N1 = 2.4e8
-    Ndelta = 2.3976e8
     tao = 150
 
-    Planet.atmosphere.NMass += 5*log10( 2.4*( 1 + 1000*exp(-t/tao) ) )
-    Planet.Mass += 5*log10( 2.4*( 1 + 1000*exp(-t/tao) ) )
+    Planet.atmosphere.NMass += log10(5) + log10( 2.4*( 1 + 1000*exp(-t/tao) ) )
+    Planet.Mass += log10(5) + log10( 2.4*( 1 + 1000*exp(-t/tao) ) )
 
-    return Planet
 end
 
 #                   --------------------------------------------------                   #
@@ -230,7 +224,6 @@ function F_Henry(Planet)
     else
         #No change if cmax = ccurr
     end
-    return Planet
 end
 
 #                   ----------------------------------------------------                   #
@@ -294,5 +287,4 @@ function F_Henry_looped(Planet)
         OceanicConc = AtomicMassN2*Planet.ocean.NMass - Planet.ocean.volume
 
     end
-    return Planet
 end

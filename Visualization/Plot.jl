@@ -13,6 +13,8 @@ using PyPlot
 #####--------------------------------------------------------------------------------#####
 #####--------------------------------------------------------------------------------#####
 
+
+
 function visualize(Monitor)
 
     VisualizeNFractionOverTime(Monitor)
@@ -25,7 +27,7 @@ end
 function VisualizeNFractionOverTime(Monitor)
 
     PyPlot.clf()
-    NFracPlot = Plots.plot(Monitor.time,Monitor.CrustNFraction,title = "Crust",legend = false,color = "green")
+    Plots.plot(Monitor.time,Monitor.CrustNFraction,title = "Crust",legend = false,color = "green")
 
     Plots.plot!(Monitor.time,Monitor.OceanNFraction,title = "Ocean",legend = false,color = "blue")
     Plots.plot!(Monitor.time,Monitor.AtmosphereNFraction,title = "Atmosphere",legend = false,color = "black")
@@ -34,8 +36,8 @@ function VisualizeNFractionOverTime(Monitor)
     #= subplot = Plots.plot(CrustNFracPlot,OceanNFracPlot,AtmosphereNFracPlot,MantleNFracPlot,
                 layout = (4,1)) =#
 
-
-    png(NFracPlot,"/home/andrew/Desktop/Elemental-Cycling-Biomass/Outputs/NitrogenFractionOverTime.png")          
+    
+    png("/home/andrew/Desktop/Elemental-Cycling-Biomass/Outputs/NitrogenFractionOverTime.png")          
 
 end
 
@@ -60,9 +62,8 @@ function VisualizeNMassOverTime(Monitor)
     PyPlot.clf()
     Plots.plot(CrustNMassPlot, OceanNMassPlot,AtmosphereNMassPlot,MantleNMassPlot,
                 layout = (4,1))
-
-
-    png(subplot,"/home/andrew/Desktop/Elemental-Cycling-Biomass/Outputs/NitrogenMassOverTime.png")          
+    
+    png("/home/andrew/Desktop/Elemental-Cycling-Biomass/Outputs/NitrogenMassOverTime.png")          
     
 end
 
