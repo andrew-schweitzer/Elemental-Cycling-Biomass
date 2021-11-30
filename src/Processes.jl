@@ -75,7 +75,7 @@ end
 
 function F_Mantle_Atmosphere(Planet) 
 
-    delta = log10(6) + log10(rand(2800:3000))
+    delta = 6 + log10(rand(2800:3000))
 
     while delta > Planet.mantle.NMass
         delta = delta/2
@@ -111,8 +111,8 @@ function F_Meteor(t,Planet)
     N1 = 2.4e8
     tao = 150
 
-    Planet.atmosphere.NMass += log10(5) + log10( 2.4*( 1 + 1000*exp(-t/tao) ) )
-    Planet.Mass += log10(5) + log10( 2.4*( 1 + 1000*exp(-t/tao) ) )
+    Planet.atmosphere.NMass += 5 + log10( 2.4*( 1 + 1000*exp(-t/tao) ) )
+    Planet.Mass += 5 + log10( 2.4*( 1 + 1000*exp(-t/tao) ) )
 
 end
 
@@ -184,14 +184,14 @@ function F_Henry(Planet)
         Planet.ocean.volume
                                                                                         =#
 
-    AtmosphericConc = (Planet.atmosphere.NMass - Planet.atmosphere.volume) - log10(0.032)
-    OceanicConc = (Planet.ocean.NMass - Planet.ocean.volume) - log10(0.032)
+    AtmosphericConc = (Planet.atmosphere.NMass - Planet.atmosphere.volume)/0.032
+    OceanicConc = (Planet.ocean.NMass - Planet.ocean.volume)/0.032
 
     if (0.015) * AtmosphericConc > OceanicConc
 
         # here is can be seen that the oceanic concentration is low thus dissolves 
         # atmospheric nitrogen
-        ConcDelta = log(0.015) * AtmosphericConc - OceanicConc
+        ConcDelta = 0.015 * AtmosphericConc - OceanicConc
 
         # Check if the concentration difference is larger than the reservoir being taken
         # from. Change value to half of the current resevoir value if this is true.
@@ -201,8 +201,8 @@ function F_Henry(Planet)
 
         end
         
-        Planet.atmosphere.NMass -= ConcDelta*Planet.atmosphere.volume*AtomicMassN2
-        Planet.ocean.NMass += ConcDelta*Planet.atmosphere.volume*AtomicMassN2
+        Planet.atmosphere.NMass -= (ConcDelta*Planet.atmosphere.volume)*0.032
+        Planet.ocean.NMass += (ConcDelta*Planet.atmosphere.volume)*0.032
 
     elseif (0.015) * AtmosphericConc < OceanicConc
 
@@ -218,8 +218,8 @@ function F_Henry(Planet)
             
         end
 
-        Planet.atmosphere.NMass += (ConcDelta*Planet.ocean.volume)*AtomicMassN2
-        Planet.ocean.NMass -= (ConcDelta*Planet.ocean.volume)*AtomicMassN2
+        Planet.atmosphere.NMass += (ConcDelta*Planet.ocean.volume)*0.032
+        Planet.ocean.NMass -= (ConcDelta*Planet.ocean.volume)*0.032
 
     else
         #No change if cmax = ccurr
