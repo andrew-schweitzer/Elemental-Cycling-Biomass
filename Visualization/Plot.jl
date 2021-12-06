@@ -2,12 +2,7 @@
 #####--------------------------------------------------------------------------------#####
 
 
-using Classes
-using Parameters
-using DataFrames
-using StaticArrays
-using Plots
-using PyPlot
+using Classes, Parameters, DataFrames, StaticArrays, Plots, PyPlot
 
 
 #####--------------------------------------------------------------------------------#####
@@ -59,6 +54,7 @@ function VisualizeNFractionOverTime(Monitor)
                          MantleNFracPlot,
                          layout = (4,1),
                          legend = true,
+                         figsize=(10,20),
                          left_margin = [20Plots.mm 0Plots.mm])
 
     

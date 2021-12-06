@@ -48,10 +48,10 @@ function initialize()
 
     
     
-    Planet.ocean.Nfraction = Planet.ocean.NMass - Planet.NMass
-    Planet.crust.Nfraction = Planet.crust.NMass - Planet.NMass
-    Planet.mantle.Nfraction = Planet.mantle.NMass - Planet.NMass
-    Planet.atmosphere.Nfraction = Planet.atmosphere.NMass - Planet.NMass
+    Planet.ocean.Nfraction = 10^(Planet.ocean.NMass - Planet.NMass)
+    Planet.crust.Nfraction = 10^(Planet.crust.NMass - Planet.NMass)
+    Planet.mantle.Nfraction = 10^(Planet.mantle.NMass - Planet.NMass)
+    Planet.atmosphere.Nfraction = 10^(Planet.atmosphere.NMass - Planet.NMass)
 
     return Monitor,Planet
 end
@@ -68,10 +68,10 @@ function evolve(t,Planet)
     F_Henry(Planet)
     F_Meteor(t,Planet)
 
-    Planet.ocean.Nfraction = 10^Planet.ocean.NMass / Planet.NMass
-    Planet.crust.Nfraction = 10^Planet.crust.NMass / Planet.NMass
-    Planet.mantle.Nfraction = 10^Planet.mantle.NMass / Planet.NMass
-    Planet.atmosphere.Nfraction = 10^Planet.atmosphere.NMass / Planet.NMass
+    Planet.ocean.Nfraction = 10^(Planet.ocean.NMass - Planet.NMass)
+    Planet.crust.Nfraction = 10^(Planet.crust.NMass - Planet.NMass)
+    Planet.mantle.Nfraction = 10^(Planet.mantle.NMass - Planet.NMass)
+    Planet.atmosphere.Nfraction = 10^(Planet.atmosphere.NMass - Planet.NMass)
 
     return Planet
 
