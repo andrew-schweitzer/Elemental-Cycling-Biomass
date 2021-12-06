@@ -36,7 +36,6 @@ end
 
 @with_kw mutable struct PlanetaryBody
     NMass::Float64 = 0.0 # Mass of all N on planet
-    NFraction::Float64 = 1.0
     Mass::Float64 = 0.0 # Mass of Planet
     ocean::Ocean
     crust::Crust

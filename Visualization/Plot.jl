@@ -72,13 +72,29 @@ function VisualizeNMassOverTime(Monitor)
     # This is the Nitrogen Mass by Reservoir Time Series
     
     PyPlot.clf()
-    CrustNMassPlot = Plots.bar(Monitor.time,Monitor.CrustNMass,title = "Crust",legend = false,color = "black")
+    CrustNMassPlot = Plots.areaplot(Monitor.time,
+                               Monitor.CrustNMass,
+                               title = "Crust",
+                               legend = false,
+                               color = "black")
     gcf()
-    OceanNMassPlot = Plots.bar(Monitor.time,Monitor.OceanNMass,title = "Ocean",legend = false,color = "black")
+    OceanNMassPlot = Plots.areaplot(Monitor.time,
+                                    Monitor.OceanNMass,
+                                    title = "Ocean",
+                                    legend = false,
+                                    color = "black")
     gcf()
-    AtmosphereNMassPlot = Plots.bar(Monitor.time,Monitor.AtmosphereNMass,title = "Atmosphere",legend = false,color = "black")
+    AtmosphereNMassPlot = Plots.areaplot(Monitor.time,
+                                        Monitor.AtmosphereNMass,
+                                        title = "Atmosphere",
+                                        legend = false,
+                                        color = "black")
     gcf()
-    MantleNMassPlot = Plots.bar(Monitor.time,y = Monitor.MantleNMass,title = "Mantle",legend = false,color = "black")
+    MantleNMassPlot = Plots.areaplot(Monitor.time,
+                                     Monitor.MantleNMass,
+                                     title = "Mantle",
+                                     legend = false,
+                                     color = "black")
     gcf()
     PyPlot.clf()
     subplot = Plots.plot(CrustNMassPlot, OceanNMassPlot,AtmosphereNMassPlot,MantleNMassPlot,
